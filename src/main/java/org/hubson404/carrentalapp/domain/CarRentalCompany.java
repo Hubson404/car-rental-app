@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Set;
 
@@ -11,13 +12,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ConfigurationProperties(prefix ="org.hubson404.carrentalapp")
 public class CarRentalCompany {
 
     private String companyName;
     private String domainAddress;
     private String contactAddress;
-    private String ownerName;
-    private String logo;
+    private String ownersName;
+    private String companyLogo;
 
     private Set<Department> departments;
 
