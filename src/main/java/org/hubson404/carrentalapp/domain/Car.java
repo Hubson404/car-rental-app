@@ -44,7 +44,4 @@ public class Car {
     @JoinColumn(name = "department_id")
     private Department department;
 
-//    @ManyToOne
-//    private User user;
-
 }
