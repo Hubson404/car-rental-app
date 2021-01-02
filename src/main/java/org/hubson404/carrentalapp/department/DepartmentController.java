@@ -2,6 +2,7 @@ package org.hubson404.carrentalapp.department;
 
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class DepartmentController {
     }
 
     @PostMapping("/departments")
+    @ResponseStatus(HttpStatus.CREATED)
     public DepartmentDTO createDepartment(@RequestBody DepartmentDTO departmentDTO) {
         return departmentService.createDepartment(departmentDTO);
     }

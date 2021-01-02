@@ -26,7 +26,7 @@ public class DepartmentService {
     }
 
     public DepartmentDTO createDepartment(DepartmentDTO departmentDTO) {
-        if (departmentDTO.getAddress().isBlank()) {
+        if (departmentDTO.getAddress() == null || departmentDTO.getAddress().isBlank()) {
             throw new InsufficientDataException("Department address must be specified.");
         }
         Department createdDepartment = departmentRepository.save(departmentMapper.toDepartment(departmentDTO));
@@ -44,6 +44,5 @@ public class DepartmentService {
         departmentRepository.deleteById(id);
         return departmentById;
     }
-
 
 }
