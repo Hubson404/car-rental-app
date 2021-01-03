@@ -21,4 +21,10 @@ public class ExceptionHandlerController {
     public void DepartmentNotFoundExceptionHandler(DepartmentNotFoundException exception) {
         log.error(exception.getMessage());
     }
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void EmployeeNotFoundExceptionHandler(EmployeeNotFoundException exception) {
+        log.error(exception.getMessage());
+    }
 }
