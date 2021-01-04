@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/department/{id}")
-    public List<EmployeeDTO> findEmployeeByDepartmentId(@PathVariable Long id) {
+    public List<EmployeeDTO> findEmployeesByDepartmentId(@PathVariable Long id) {
         List<Employee> employees = employeeService.findEmployeeByDepartmentId(id);
         return employees.stream().map(employeeMapper::toEmployeeDTO).collect(Collectors.toList());
     }
