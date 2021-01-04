@@ -81,7 +81,7 @@ class DepartmentIntegrationTest {
     }
 
     @Test
-    void createNewDepartment_WhenAddressFieldIsBlank_createsNewDepartmentAndReturnsStatusCode201() throws Exception {
+    void createNewDepartment_WhenAddressFieldIsBlank_ReturnsStatusCode400() throws Exception {
         // given
         int expectedNumberOfEntriesInRepository = 0;
         DepartmentDTO departmentDTO = DepartmentDTO.builder()

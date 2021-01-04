@@ -48,7 +48,7 @@ class DepartmentServiceTest {
         when(departmentMapper.toDepartmentDTO(any(Department.class))).thenReturn(new DepartmentDTO());
         // when
         DepartmentDTO result = departmentService.createDepartment(
-                new DepartmentDTO(null, "some address", null, null));
+                new DepartmentDTO(null, "some address"));
         // then
         assertThat(result).isInstanceOf(DepartmentDTO.class);
         verify(departmentRepository, times(1)).save(any(Department.class));
@@ -59,7 +59,7 @@ class DepartmentServiceTest {
         // given
         // when
         Throwable result = catchThrowable(() -> departmentService.createDepartment(
-                new DepartmentDTO(null, " ", null, null)));
+                new DepartmentDTO(null, " ")));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(departmentRepository, times(0)).save(any(Department.class));
@@ -70,7 +70,7 @@ class DepartmentServiceTest {
         // given
         // when
         Throwable result = catchThrowable(() -> departmentService.createDepartment(
-                new DepartmentDTO(null, null, null, null)));
+                new DepartmentDTO(null, null)));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(departmentRepository, times(0)).save(any(Department.class));
