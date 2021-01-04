@@ -1,14 +1,8 @@
 package org.hubson404.carrentalapp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity(name = "departments")
@@ -24,7 +18,10 @@ public class Department {
 
     private String address;
 
-    @OneToMany(mappedBy = "department")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "department",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.MERGE)
     private Set<Employee> employees;
 
     @OneToMany(mappedBy = "department")

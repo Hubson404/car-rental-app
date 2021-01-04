@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
+import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.model.EmployeeDTO;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,7 @@ class EmployeeIntegrationTest {
     @BeforeEach
     void setUp() {
         employeeRepository.deleteAll();
+        departmentRepository.deleteAll();
     }
 
     @Test
@@ -69,7 +71,8 @@ class EmployeeIntegrationTest {
         // given
         int expectedNumberOfEntriesInRepository = 1;
 
-        Department department = departmentRepository.save(new Department(null, "Warsaw", null, null));
+        Department department = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .firstName("some firstname")
                 .lastName("some lastname")
@@ -97,7 +100,8 @@ class EmployeeIntegrationTest {
         // given
         int expectedNumberOfEntriesInRepository = 0;
 
-        Department department = departmentRepository.save(new Department(null, "Warsaw", null, null));
+        Department department = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .firstName("  ")
                 .lastName("some lastname")
@@ -124,7 +128,8 @@ class EmployeeIntegrationTest {
         // given
         int expectedNumberOfEntriesInRepository = 0;
 
-        Department department = departmentRepository.save(new Department(null, "Warsaw", null, null));
+        Department department = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .firstName("some firstName")
                 .lastName("  ")
@@ -185,8 +190,8 @@ class EmployeeIntegrationTest {
         // then
         MockHttpServletResponse response = result.getResponse();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        Optional<Employee> departmentOptional = employeeRepository.findById(savedEmployeeId);
-        assertThat(departmentOptional.isPresent()).isTrue();
+        Optional<Employee> employeeOptional = employeeRepository.findById(savedEmployeeId);
+        assertThat(employeeOptional.isPresent()).isTrue();
 
     }
 
@@ -202,8 +207,8 @@ class EmployeeIntegrationTest {
         // then
         MockHttpServletResponse response = result.getResponse();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        Optional<Employee> departmentOptional = employeeRepository.findById(idOfNonexistentEmployee);
-        assertThat(departmentOptional.isEmpty()).isTrue();
+        Optional<Employee> employeeOptional = employeeRepository.findById(idOfNonexistentEmployee);
+        assertThat(employeeOptional.isEmpty()).isTrue();
 
     }
 
@@ -247,5 +252,91 @@ class EmployeeIntegrationTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
         List<Employee> employees = employeeRepository.findAll();
         assertThat(employees.size()).isEqualTo(expectedNumberOfEntriesInRepository);
+    }
+
+    @Test
+    void promoteEmployeeById_ReturnsEmployeeByIdAndPositionSetToManagerAndReturnStatusCode200() throws Exception {
+        // given
+        Department warsaw = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
+        Employee savedEmployee = employeeRepository.save(new Employee(
+                null, "name", "lastname", EmployeePosition.BASIC, warsaw));
+        Long savedEmployeeId = savedEmployee.getId();
+
+        // when
+        MockHttpServletRequestBuilder patch = patch("/employees/promote/" + savedEmployeeId);
+        MvcResult result = mockMvc.perform(patch).andReturn();
+
+        // then
+        MockHttpServletResponse response = result.getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        Optional<Employee> employeeOptional = employeeRepository.findById(savedEmployeeId);
+
+        assertThat(employeeOptional.isPresent()).isTrue();
+        assertThat(departmentRepository.findById(warsaw.getId()).get().getEmployees().size()).isEqualTo(1);
+        assertThat(employeeOptional.get().getPosition()).isEqualTo(EmployeePosition.MANAGER);
+
+    }
+
+    @Test
+    void promoteEmployeeById_EmployeeIsAlreadyPromoted_ReturnStatusCode404() throws Exception {
+        // given
+        Department warsaw = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
+        Employee savedEmployee = employeeRepository.save(new Employee(
+                null, "name", "lastname", EmployeePosition.MANAGER, warsaw));
+        Long savedEmployeeId = savedEmployee.getId();
+
+        // when
+        MockHttpServletRequestBuilder patch = patch("/employees/promote/" + savedEmployeeId);
+        MvcResult result = mockMvc.perform(patch).andReturn();
+
+        // then
+        MockHttpServletResponse response = result.getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+
+    }
+
+    @Test
+    void demoteEmployeeById_ReturnsEmployeeByIdAndPositionSetToBasicAndReturnStatusCode200() throws Exception {
+        // given
+        Department warsaw = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
+        Employee savedEmployee = employeeRepository.save(new Employee(
+                null, "name", "lastname", EmployeePosition.MANAGER, warsaw));
+        Long savedEmployeeId = savedEmployee.getId();
+
+        // when
+        MockHttpServletRequestBuilder patch = patch("/employees/demote/" + savedEmployeeId);
+        MvcResult result = mockMvc.perform(patch).andReturn();
+
+        // then
+        MockHttpServletResponse response = result.getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        Optional<Employee> employeeOptional = employeeRepository.findById(savedEmployeeId);
+
+        assertThat(employeeOptional.isPresent()).isTrue();
+        assertThat(departmentRepository.findById(warsaw.getId()).get().getEmployees().size()).isEqualTo(1);
+        assertThat(employeeOptional.get().getPosition()).isEqualTo(EmployeePosition.BASIC);
+
+    }
+
+    @Test
+    void demoteEmployeeById_EmployeeIsAlreadyBasicEmployee_ReturnStatusCode404() throws Exception {
+        // given
+        Department warsaw = departmentRepository.save(new Department(
+                null, "Warsaw", null, null));
+        Employee savedEmployee = employeeRepository.save(new Employee(
+                null, "name", "lastname", EmployeePosition.BASIC, warsaw));
+        Long savedEmployeeId = savedEmployee.getId();
+
+        // when
+        MockHttpServletRequestBuilder patch = patch("/employees/demote/" + savedEmployeeId);
+        MvcResult result = mockMvc.perform(patch).andReturn();
+
+        // then
+        MockHttpServletResponse response = result.getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+
     }
 }

@@ -10,12 +10,14 @@ import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EmployeeService {
 
@@ -65,5 +67,29 @@ public class EmployeeService {
 
     public List<Employee> findEmployeeByDepartmentId(Long departmentId) {
         return employeeRepository.findEmployeeByDepartment_Id(departmentId);
+    }
+
+    public Employee promoteEmployee(Long id) {
+
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.BASIC);
+
+        Employee employee = optionalEmployee.orElseThrow(() -> new EmployeeNotFoundException(
+                "Could not find employee by given id or employee is already promoted."));
+
+        employee.setPosition(EmployeePosition.MANAGER);
+
+        return employee;
+    }
+
+    public Employee demoteEmployee(Long id) {
+
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.MANAGER);
+
+        Employee employee = optionalEmployee.orElseThrow(() -> new EmployeeNotFoundException(
+                "Could not find employee by given id or employee is already 'BASIC' employee."));
+
+        employee.setPosition(EmployeePosition.BASIC);
+
+        return employee;
     }
 }

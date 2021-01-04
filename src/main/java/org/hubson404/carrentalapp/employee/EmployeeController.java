@@ -34,6 +34,18 @@ public class EmployeeController {
         return employees.stream().map(employeeMapper::toEmployeeDTO).collect(Collectors.toList());
     }
 
+    @PatchMapping("/employees/promote/{id}")
+    public EmployeeDTO promoteEmployeeById(@PathVariable Long id) {
+        Employee promotedEmployee = employeeService.promoteEmployee(id);
+        return employeeMapper.toEmployeeDTO(promotedEmployee);
+    }
+
+    @PatchMapping("/employees/demote/{id}")
+    public EmployeeDTO demoteEmployeeById(@PathVariable Long id) {
+        Employee promotedEmployee = employeeService.demoteEmployee(id);
+        return employeeMapper.toEmployeeDTO(promotedEmployee);
+    }
+
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeDTO createEmployee(@RequestBody EmployeeDTO employeeDTO) {

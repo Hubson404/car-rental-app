@@ -3,6 +3,7 @@ package org.hubson404.carrentalapp.employee;
 import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
+import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void createDepartment_whenFirstNameFieldIsBlank_ThrowsExceptionAndDoesNotCallDepartmentRepository() {
+    void createEmployee_whenFirstNameFieldIsBlank_ThrowsExceptionAndDoesNotCallEmployeeRepository() {
         // given
         Department department = new Department();
         department.setId(1L);
@@ -69,11 +70,11 @@ class EmployeeServiceTest {
                         null, department)));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(departmentRepository, times(0)).save(any(Department.class));
+        verify(employeeRepository, times(0)).save(any(Employee.class));
     }
 
     @Test
-    void createDepartment_whenLastNameFieldIsBlank_ThrowsExceptionAndDoesNotCallDepartmentRepository() {
+    void createEmployee_whenLastNameFieldIsBlank_ThrowsExceptionAndDoesNotCallEmployeeRepository() {
         // given
         Department department = new Department();
         department.setId(1L);
@@ -84,11 +85,11 @@ class EmployeeServiceTest {
                         null, department)));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(departmentRepository, times(0)).save(any(Department.class));
+        verify(employeeRepository, times(0)).save(any(Employee.class));
     }
 
     @Test
-    void createDepartment_whenDepartmentFieldIsBlank_ThrowsExceptionAndDoesNotCallDepartmentRepository() {
+    void createEmployee_whenDepartmentFieldIsBlank_ThrowsExceptionAndDoesNotCallEmployeeRepository() {
         // given
 
         // when
@@ -97,7 +98,7 @@ class EmployeeServiceTest {
                         null, null)));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(departmentRepository, times(0)).save(any(Department.class));
+        verify(employeeRepository, times(0)).save(any(Employee.class));
     }
 
     @Test
@@ -144,5 +145,30 @@ class EmployeeServiceTest {
         assertThat(result).isExactlyInstanceOf(EmployeeNotFoundException.class);
         verify(employeeRepository, times(1)).findById(anyLong());
         verify(employeeRepository, times(0)).deleteById(anyLong());
+    }
+
+    @Test
+    void promoteEmployeeById_callsEmployeeRepositoryAndUpdatesEmployeePosition() {
+        //given
+        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(
+                new Employee(1L, "name", "lastname", EmployeePosition.BASIC, new Department())));
+        //when
+        Employee employee = employeeService.promoteEmployee(1L);
+        //then
+        assertThat(employee.getPosition()).isEqualTo(EmployeePosition.MANAGER);
+        verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());
+    }
+
+    @Test
+    void promoteEmployeeById_EmployeeByGivenIdDoesNotExistOrAlreadyPromoted_callsEmployeeRepositoryAndThrowsException() {
+        //given
+        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.empty());
+
+        //when
+        Throwable result = catchThrowable(() -> employeeService.promoteEmployee(1L));
+
+        //then
+        assertThat(result).isExactlyInstanceOf(EmployeeNotFoundException.class);
+        verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());
     }
 }
