@@ -7,32 +7,20 @@ import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeCreateService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
-
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
-    }
-
-    public Employee findEmployeeById(Long id) {
-        Optional<Employee> byId = employeeRepository.findById(id);
-        return byId.orElseThrow(
-                () -> new EmployeeNotFoundException("Could not find department with id: " + id));
-    }
 
     public Employee createEmployee(Employee employee) {
 
@@ -57,39 +45,5 @@ public class EmployeeService {
 
         return employeeRepository.save(employee);
 
-    }
-
-    public Employee deleteEmployeeById(Long id) {
-        Employee employeeById = findEmployeeById(id);
-        employeeRepository.deleteById(id);
-        return employeeById;
-    }
-
-    public List<Employee> findEmployeeByDepartmentId(Long departmentId) {
-        return employeeRepository.findEmployeeByDepartment_Id(departmentId);
-    }
-
-    public Employee promoteEmployee(Long id) {
-
-        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.BASIC);
-
-        Employee employee = optionalEmployee.orElseThrow(() -> new EmployeeNotFoundException(
-                "Could not find employee by given id or employee is already promoted."));
-
-        employee.setPosition(EmployeePosition.MANAGER);
-
-        return employee;
-    }
-
-    public Employee demoteEmployee(Long id) {
-
-        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.MANAGER);
-
-        Employee employee = optionalEmployee.orElseThrow(() -> new EmployeeNotFoundException(
-                "Could not find employee by given id or employee is already 'BASIC' employee."));
-
-        employee.setPosition(EmployeePosition.BASIC);
-
-        return employee;
     }
 }

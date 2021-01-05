@@ -241,7 +241,7 @@ class EmployeeIntegrationTest {
         for (int i = 0; i < expectedNumberOfEntriesInRepository; i++) {
             employeeRepository.save(new Employee());
         }
-        Long idOfNonexistentEmployee = 777L;
+        long idOfNonexistentEmployee = 777L;
 
         // when
         MockHttpServletRequestBuilder delete = delete("/employees/" + idOfNonexistentEmployee);
@@ -273,13 +273,13 @@ class EmployeeIntegrationTest {
         Optional<Employee> employeeOptional = employeeRepository.findById(savedEmployeeId);
 
         assertThat(employeeOptional.isPresent()).isTrue();
-        assertThat(departmentRepository.findById(warsaw.getId()).get().getEmployees().size()).isEqualTo(1);
+        assertThat(departmentRepository.findById(warsaw.getId()).orElseThrow().getEmployees().size()).isEqualTo(1);
         assertThat(employeeOptional.get().getPosition()).isEqualTo(EmployeePosition.MANAGER);
 
     }
 
     @Test
-    void promoteEmployeeById_EmployeeIsAlreadyPromoted_ReturnStatusCode404() throws Exception {
+    void promoteEmployeeById_EmployeeIsAlreadyPromoted_ReturnStatusCode400() throws Exception {
         // given
         Department warsaw = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
@@ -293,7 +293,7 @@ class EmployeeIntegrationTest {
 
         // then
         MockHttpServletResponse response = result.getResponse();
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 
     }
 
@@ -316,13 +316,13 @@ class EmployeeIntegrationTest {
         Optional<Employee> employeeOptional = employeeRepository.findById(savedEmployeeId);
 
         assertThat(employeeOptional.isPresent()).isTrue();
-        assertThat(departmentRepository.findById(warsaw.getId()).get().getEmployees().size()).isEqualTo(1);
+        assertThat(departmentRepository.findById(warsaw.getId()).orElseThrow().getEmployees().size()).isEqualTo(1);
         assertThat(employeeOptional.get().getPosition()).isEqualTo(EmployeePosition.BASIC);
 
     }
 
     @Test
-    void demoteEmployeeById_EmployeeIsAlreadyBasicEmployee_ReturnStatusCode404() throws Exception {
+    void demoteEmployeeById_EmployeeIsAlreadyBasicEmployee_ReturnStatusCode400() throws Exception {
         // given
         Department warsaw = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
@@ -336,7 +336,7 @@ class EmployeeIntegrationTest {
 
         // then
         MockHttpServletResponse response = result.getResponse();
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 
     }
 }
