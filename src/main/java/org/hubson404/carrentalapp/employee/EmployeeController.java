@@ -14,49 +14,60 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeCreateService employeeCreateService;
+    private final EmployeeModifyService employeeModifyService;
+    private final EmployeeFetchService employeeFetchService;
     private final EmployeeMapper employeeMapper;
+
+    @PostMapping("/employees")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EmployeeDTO createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        Employee employee = employeeCreateService.createEmployee(employeeMapper.toEmployee(employeeDTO));
+        return employeeMapper.toEmployeeDTO(employee);
+    }
 
     @GetMapping("/employees")
     public List<EmployeeDTO> findAll() {
-        List<Employee> employees = employeeService.findAll();
-        return employees.stream().map(employeeMapper::toEmployeeDTO).collect(Collectors.toList());
+        List<Employee> employees = employeeFetchService.findAll();
+        return toEmployeeDtoList(employees);
     }
 
     @GetMapping("/employees/{id}")
     public EmployeeDTO findEmployeeById(@PathVariable Long id) {
-        return employeeMapper.toEmployeeDTO(employeeService.findEmployeeById(id));
+        return employeeMapper.toEmployeeDTO(employeeFetchService.findEmployeeById(id));
+    }
+
+    @GetMapping("/employees/managers/{departmentId}")
+    public List<EmployeeDTO> findManagersInDepartmentById(@PathVariable Long departmentId) {
+        List<Employee> managers = employeeFetchService.findManagersInDepartmentById(departmentId);
+        return toEmployeeDtoList(managers);
     }
 
     @GetMapping("/employees/department/{id}")
     public List<EmployeeDTO> findEmployeesByDepartmentId(@PathVariable Long id) {
-        List<Employee> employees = employeeService.findEmployeeByDepartmentId(id);
+        List<Employee> employees = employeeFetchService.findEmployeeByDepartmentId(id);
         return employees.stream().map(employeeMapper::toEmployeeDTO).collect(Collectors.toList());
     }
 
     @PatchMapping("/employees/promote/{id}")
     public EmployeeDTO promoteEmployeeById(@PathVariable Long id) {
-        Employee promotedEmployee = employeeService.promoteEmployee(id);
+        Employee promotedEmployee = employeeModifyService.promoteEmployee(id);
         return employeeMapper.toEmployeeDTO(promotedEmployee);
     }
 
     @PatchMapping("/employees/demote/{id}")
     public EmployeeDTO demoteEmployeeById(@PathVariable Long id) {
-        Employee promotedEmployee = employeeService.demoteEmployee(id);
+        Employee promotedEmployee = employeeModifyService.demoteEmployee(id);
         return employeeMapper.toEmployeeDTO(promotedEmployee);
     }
 
-    @PostMapping("/employees")
-    @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeDTO createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = employeeService.createEmployee(employeeMapper.toEmployee(employeeDTO));
-        return employeeMapper.toEmployeeDTO(employee);
-    }
-
     @DeleteMapping("/employees/{id}")
-    public EmployeeDTO deleteEmployeeById(@PathVariable Long id) {
-        return employeeMapper.toEmployeeDTO(employeeService.deleteEmployeeById(id));
+    public void deleteEmployeeById(@PathVariable Long id) {
+        employeeModifyService.deleteEmployeeById(id);
     }
 
+    private List<EmployeeDTO> toEmployeeDtoList(List<Employee> employees) {
+        return employees.stream().map(employeeMapper::toEmployeeDTO).collect(Collectors.toList());
+    }
 
 }

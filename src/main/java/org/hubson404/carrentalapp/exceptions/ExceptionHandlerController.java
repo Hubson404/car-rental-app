@@ -27,4 +27,10 @@ public class ExceptionHandlerController {
     public void EmployeeNotFoundExceptionHandler(EmployeeNotFoundException exception) {
         log.error(exception.getMessage());
     }
+
+    @ExceptionHandler(IllegalEmployeeIdException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void IllegalEmployeeIdExceptionHandler(IllegalEmployeeIdException exception) {
+        log.error(exception.getMessage());
+    }
 }
