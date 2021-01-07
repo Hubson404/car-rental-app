@@ -10,7 +10,8 @@ import org.hubson404.carrentalapp.domain.enums.CarStatus;
 
 import javax.persistence.*;
 
-@Entity(name = "cars")
+@Entity
+@Table(name = "cars")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,6 +41,7 @@ public class Car {
 
     private Double costPerDay;
 
+    //prawdopodobnie do usunięcia
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;

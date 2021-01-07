@@ -33,4 +33,10 @@ public class ExceptionHandlerController {
     public void IllegalEmployeeIdExceptionHandler(IllegalEmployeeIdException exception) {
         log.error(exception.getMessage());
     }
+
+    @ExceptionHandler(CarNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void CarNotFoundExceptionHandler(CarNotFoundException exception) {
+        log.error(exception.getMessage());
+    }
 }

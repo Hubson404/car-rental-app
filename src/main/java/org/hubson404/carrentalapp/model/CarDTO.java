@@ -20,4 +20,5 @@ public class CarDTO {
     private Long mileage;
     private String carStatus;
     private Double costPerDay;
+    private DepartmentDTO department;
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
+import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -14,37 +16,42 @@ import java.time.Year;
 public class CarCreateService {
 
     private final CarRepository carRepository;
+    private final CarMapper carMapper;
 
-    public Car createCar(Car car) {
+    public Car createCar(CarDTO carDTO) {
 
-        if (car.getBrand() == null || car.getBrand().isBlank()) {
+        if (carDTO.getBrand() == null || carDTO.getBrand().isBlank()) {
             throw new InsufficientDataException("Car brand must be specified");
         }
-        if (car.getModel() == null || car.getModel().isBlank()) {
+        if (carDTO.getModel() == null || carDTO.getModel().isBlank()) {
             throw new InsufficientDataException("Car model must be specified");
         }
-        if (car.getProductionYear() == null) {
+        if (carDTO.getProductionYear() == null) {
             throw new InsufficientDataException("Car production year must be specified");
-        } else if (car.getProductionYear() > Year.now().getValue()) {
+        } else if (carDTO.getProductionYear() > Year.now().getValue()) {
             throw new IllegalArgumentException("Car production year cannot be greater than current year");
         }
-        if (car.getMileage() == null || car.getModel().isBlank()) {
+        if (carDTO.getMileage() == null) {
             log.info("Mileage was not specified, setting mileage to '0km'");
-            car.setMileage(0L);
+            carDTO.setMileage(0L);
         }
-        if (car.getCostPerDay() == null || car.getCostPerDay().equals(0d)) {
+        if (carDTO.getCostPerDay() == null || carDTO.getCostPerDay().equals(0d)) {
             throw new InsufficientDataException("Car cost per day must be specified");
         }
-        if (car.getCarBodyType() == null) {
+        if (carDTO.getCarBodyType() == null || carDTO.getCarBodyType().isBlank()) {
             throw new InsufficientDataException("Car body type must be specified");
         }
-        if (car.getColor() == null) {
+        if (carDTO.getColor() == null || carDTO.getColor().isBlank()) {
             throw new InsufficientDataException("Car color type must be specified");
         }
-        if (car.getDepartment() == null) {
+        if (carDTO.getCarStatus() == null || carDTO.getCarStatus().isBlank()) {
+            throw new InsufficientDataException("Car status type must be specified");
+        }
+        if (carDTO.getDepartment() == null) {
             throw new InsufficientDataException("Initial department must be specified");
         }
 
-        return carRepository.save(car);
+        return carRepository.save(carMapper.toCar(carDTO));
+
     }
 }
