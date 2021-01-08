@@ -2,13 +2,17 @@ package org.hubson404.carrentalapp.car;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Car;
+import org.hubson404.carrentalapp.domain.Department;
+import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.hubson404.carrentalapp.model.CarDTO;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -16,6 +20,7 @@ import java.time.Year;
 public class CarCreateService {
 
     private final CarRepository carRepository;
+    private final DepartmentRepository departmentRepository;
     private final CarMapper carMapper;
 
     public Car createCar(CarDTO carDTO) {
@@ -51,7 +56,14 @@ public class CarCreateService {
             throw new InsufficientDataException("Initial department must be specified");
         }
 
-        return carRepository.save(carMapper.toCar(carDTO));
+        Car createdCar = carMapper.toCar(carDTO);
+
+        Optional<Department> optionalDepartment = departmentRepository.findById(carDTO.getDepartment().getId());
+        Department department = optionalDepartment.orElseThrow(() -> new DepartmentNotFoundException(
+                "Could not find department with id: " + carDTO.getDepartment().getId()));
+        createdCar.setDepartment(department);
+
+        return carRepository.save(createdCar);
 
     }
 }

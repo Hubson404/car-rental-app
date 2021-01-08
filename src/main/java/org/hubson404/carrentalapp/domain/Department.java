@@ -24,7 +24,10 @@ public class Department {
             cascade = CascadeType.MERGE)
     private Set<Employee> employees;
 
-    @OneToMany(mappedBy = "department")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "department",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.MERGE)
     private Set<Car> cars;
 
 }

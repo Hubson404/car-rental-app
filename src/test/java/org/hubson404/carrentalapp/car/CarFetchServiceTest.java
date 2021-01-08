@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +28,7 @@ class CarFetchServiceTest {
         // given
         when(carRepository.findAll()).thenReturn(new ArrayList<>());
         // when
-        List<Car> result = carFetchService.findAllCars();
+        carFetchService.findAllCars();
         // then
         verify(carRepository, times(1)).findAll();
     }

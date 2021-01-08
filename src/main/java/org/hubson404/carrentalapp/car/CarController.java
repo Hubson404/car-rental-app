@@ -33,17 +33,17 @@ public class CarController {
     }
 
     @PostMapping("/cars")
+    @ResponseStatus(HttpStatus.CREATED)
     public CarDTO addCar(@RequestBody CarDTO carDTO) {
         Car car = carCreateService.createCar(carDTO);
         return carMapper.toCarDTO(car);
     }
 
-    @PatchMapping
+    @PatchMapping("/cars/{id}/modify")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public CarDTO modifyCar(Long id, @RequestBody CarDTO carDTO) {
-        Car car = carModifyservice.modifyCar(id, carDTO);
-
-        return null;
+    public CarDTO modifyCar(@PathVariable Long id, @RequestBody CarDTO carDTO) {
+        Car modifiedCar = carModifyservice.modifyCar(id, carDTO);
+        return carMapper.toCarDTO(modifiedCar);
     }
 
     @DeleteMapping("/cars/{id}")
