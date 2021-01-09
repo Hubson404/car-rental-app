@@ -41,7 +41,6 @@ class CarCreateServiceTest {
         CarDTO carDTO = new CarDTO(
                 null, "S5", "Audi", "COUPE", 1999,
                 "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
-
         // when
         carCreateService.createCar(carDTO);
         // then

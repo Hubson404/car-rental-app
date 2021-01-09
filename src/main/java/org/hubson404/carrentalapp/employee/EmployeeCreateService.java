@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
-import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
+import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,29 +22,32 @@ public class EmployeeCreateService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final EmployeeMapper employeeMapper;
 
-    public Employee createEmployee(Employee employee) {
+    public Employee createEmployee(EmployeeDTO employeeDTO) {
 
-        if (employee.getFirstName() == null || employee.getFirstName().isBlank()) {
+        if (employeeDTO.getFirstName() == null || employeeDTO.getFirstName().isBlank()) {
             throw new InsufficientDataException("Employees first name must be specified.");
         }
-        if (employee.getLastName() == null || employee.getLastName().isBlank()) {
+        if (employeeDTO.getLastName() == null || employeeDTO.getLastName().isBlank()) {
             throw new InsufficientDataException("Employees last name must be specified.");
         }
-        if (employee.getDepartment() == null) {
+        if (employeeDTO.getDepartment() == null) {
             throw new InsufficientDataException("Employees department must be specified.");
         }
-        if (employee.getPosition() == null) {
+        if (employeeDTO.getPosition() == null) {
             log.info("Position was not specified, setting position to 'BASIC'");
-            employee.setPosition(EmployeePosition.BASIC);
+            employeeDTO.setPosition("BASIC");
         }
 
-        Optional<Department> byId = departmentRepository.findById(employee.getDepartment().getId());
-        Department department = byId.orElseThrow(() -> new DepartmentNotFoundException(
-                "Could not find department with id: " + employee.getDepartment().getId()));
-        employee.setDepartment(department);
+        Employee createdEmployee = employeeMapper.toEmployee(employeeDTO);
 
-        return employeeRepository.save(employee);
+        Optional<Department> byId = departmentRepository.findById(employeeDTO.getDepartment().getId());
+        Department department = byId.orElseThrow(() -> new DepartmentNotFoundException(
+                "Could not find department with id: " + employeeDTO.getDepartment().getId()));
+        createdEmployee.setDepartment(department);
+
+        return employeeRepository.save(createdEmployee);
 
     }
 }

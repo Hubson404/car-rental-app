@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class DepartmentDTO {
 
     private Long id;
-
     private String address;
 
 }

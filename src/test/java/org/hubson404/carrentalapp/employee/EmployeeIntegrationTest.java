@@ -264,7 +264,7 @@ class EmployeeIntegrationTest {
         Long savedEmployeeId = savedEmployee.getId();
 
         // when
-        MockHttpServletRequestBuilder patch = patch("/employees/promote/" + savedEmployeeId);
+        MockHttpServletRequestBuilder patch = patch("/employees/" + savedEmployeeId + "/promote");
         MvcResult result = mockMvc.perform(patch).andReturn();
 
         // then
@@ -288,7 +288,7 @@ class EmployeeIntegrationTest {
         Long savedEmployeeId = savedEmployee.getId();
 
         // when
-        MockHttpServletRequestBuilder patch = patch("/employees/promote/" + savedEmployeeId);
+        MockHttpServletRequestBuilder patch = patch("/employees/" + savedEmployeeId + "/promote");
         MvcResult result = mockMvc.perform(patch).andReturn();
 
         // then
@@ -307,7 +307,7 @@ class EmployeeIntegrationTest {
         Long savedEmployeeId = savedEmployee.getId();
 
         // when
-        MockHttpServletRequestBuilder patch = patch("/employees/demote/" + savedEmployeeId);
+        MockHttpServletRequestBuilder patch = patch("/employees/" + savedEmployeeId + "/demote");
         MvcResult result = mockMvc.perform(patch).andReturn();
 
         // then
@@ -331,7 +331,7 @@ class EmployeeIntegrationTest {
         Long savedEmployeeId = savedEmployee.getId();
 
         // when
-        MockHttpServletRequestBuilder patch = patch("/employees/demote/" + savedEmployeeId);
+        MockHttpServletRequestBuilder patch = patch("/employees/" + savedEmployeeId + "/demote");
         MvcResult result = mockMvc.perform(patch).andReturn();
 
         // then

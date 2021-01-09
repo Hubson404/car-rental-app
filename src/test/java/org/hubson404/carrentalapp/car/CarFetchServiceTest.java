@@ -40,7 +40,6 @@ class CarFetchServiceTest {
         // when
         Car result = carFetchService.findCarById(anyLong());
         // then
-        assertThat(result).isInstanceOf(Car.class);
         verify(carRepository, times(1)).findById(anyLong());
     }
 

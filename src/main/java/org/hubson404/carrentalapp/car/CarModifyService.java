@@ -11,6 +11,7 @@ import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.model.CarDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CarModifyService {
 

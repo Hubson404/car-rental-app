@@ -127,7 +127,7 @@ class CarIntegrationTest {
                 CarBodyColor.WHITE, 0L, CarStatus.AVAILABLE, 100d, warsaw));
         Long savedCarId = savedCar.getId();
 
-        CarDTO carDTO = CarDTO.builder().model("S5").build();
+        CarDTO carDTO = CarDTO.builder().model("modifiedModel").build();
         // when
         String requestBody = objectMapper.writeValueAsString(carDTO);
 
@@ -141,6 +141,7 @@ class CarIntegrationTest {
         Optional<Car> modifiedCar = carRepository.findById(savedCarId);
 
         assertThat(modifiedCar.isPresent()).isTrue();
+        assertThat(modifiedCar.get().getModel()).isEqualTo("modifiedModel");
         assertThat(departmentRepository.findById(warsaw.getId()).orElseThrow().getCars().size()).isEqualTo(1);
     }
 
@@ -161,7 +162,6 @@ class CarIntegrationTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         List<Car> cars = carRepository.findAll();
         assertThat(cars.size()).isEqualTo(expectedNumberOfEntriesInRepository);
-
     }
 }
 

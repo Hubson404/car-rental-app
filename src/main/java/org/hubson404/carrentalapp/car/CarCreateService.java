@@ -10,12 +10,14 @@ import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.hubson404.carrentalapp.model.CarDTO;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
 import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CarCreateService {
 

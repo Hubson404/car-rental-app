@@ -4,6 +4,9 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
+import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +26,8 @@ class EmployeeCreateServiceTest {
     EmployeeRepository employeeRepository;
     @Mock
     DepartmentRepository departmentRepository;
+    @Mock
+    EmployeeMapper employeeMapper;
     @InjectMocks
     EmployeeCreateService employeeCreateService;
 
@@ -31,14 +36,14 @@ class EmployeeCreateServiceTest {
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
         when(employeeRepository.save(any(Employee.class))).thenReturn(new Employee());
-
-        Department department = new Department();
-        department.setId(1L);
-        department.setAddress("Warsaw");
+        when(employeeMapper.toEmployee(any())).thenReturn(new Employee());
         // when
         Employee result = employeeCreateService.createEmployee(
-                new Employee(null, "first name", "last name",
-                        null, department));
+                EmployeeDTO.builder()
+                        .firstName("testFirstName")
+                        .lastName("testLastName")
+                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .build());
         // then
         assertThat(result).isInstanceOf(Employee.class);
         verify(employeeRepository, times(1)).save(any(Employee.class));
@@ -52,8 +57,11 @@ class EmployeeCreateServiceTest {
         department.setAddress("Warsaw");
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                new Employee(null, "  ", "last name",
-                        null, department)));
+                EmployeeDTO.builder()
+                        .firstName("  ")
+                        .lastName("testLastName")
+                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .build()));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(employeeRepository, times(0)).save(any(Employee.class));
@@ -67,21 +75,26 @@ class EmployeeCreateServiceTest {
         department.setAddress("Warsaw");
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                new Employee(null, "first name", "  ",
-                        null, department)));
+                EmployeeDTO.builder()
+                        .firstName("testFirstName")
+                        .lastName("  ")
+                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .build()));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(employeeRepository, times(0)).save(any(Employee.class));
     }
 
     @Test
-    void createEmployee_whenDepartmentFieldIsBlank_ThrowsExceptionAndDoesNotCallEmployeeRepository() {
+    void createEmployee_whenDepartmentFieldIsNull_ThrowsExceptionAndDoesNotCallEmployeeRepository() {
         // given
 
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                new Employee(null, "first name", "last name",
-                        null, null)));
+                EmployeeDTO.builder()
+                        .firstName("testFirstName")
+                        .lastName("testLastName")
+                        .build()));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(employeeRepository, times(0)).save(any(Employee.class));
