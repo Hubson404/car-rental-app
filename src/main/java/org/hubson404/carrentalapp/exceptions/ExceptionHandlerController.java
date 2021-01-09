@@ -10,12 +10,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandlerController {
 
-    @ExceptionHandler(InsufficientDataException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void InsufficientDataExceptionHandler(InsufficientDataException exception) {
-        log.error(exception.getMessage());
-    }
-
     @ExceptionHandler(DepartmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void DepartmentNotFoundExceptionHandler(DepartmentNotFoundException exception) {
@@ -28,15 +22,27 @@ public class ExceptionHandlerController {
         log.error(exception.getMessage());
     }
 
-    @ExceptionHandler(IllegalEmployeeIdException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void IllegalEmployeeIdExceptionHandler(IllegalEmployeeIdException exception) {
-        log.error(exception.getMessage());
-    }
-
     @ExceptionHandler(CarNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void CarNotFoundExceptionHandler(CarNotFoundException exception) {
+        log.error(exception.getMessage());
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void CustomerNotFoundExceptionHandler(CustomerNotFoundException exception) {
+        log.error(exception.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void InsufficientDataExceptionHandler(InsufficientDataException exception) {
+        log.error(exception.getMessage());
+    }
+
+    @ExceptionHandler(IllegalEmployeeIdException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void IllegalEmployeeIdExceptionHandler(IllegalEmployeeIdException exception) {
         log.error(exception.getMessage());
     }
 
