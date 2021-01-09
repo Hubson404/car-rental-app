@@ -1,11 +1,12 @@
 package org.hubson404.carrentalapp.employee;
 
-import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.IllegalEmployeeIdException;
+import org.hubson404.carrentalapp.model.DepartmentDTO;
 import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,8 @@ class EmployeeModifyServiceTest {
 
     @Mock
     EmployeeRepository employeeRepository;
+    @Mock
+    EmployeeMapper employeeMapper;
     @InjectMocks
     EmployeeModifyService employeeModifyService;
 
@@ -55,9 +58,9 @@ class EmployeeModifyServiceTest {
     @Test
     void promoteEmployeeById_callsEmployeeRepositoryAndUpdatesEmployeePosition() {
         //given
-        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(
-                new Employee(1L, "name", "lastname", EmployeePosition.BASIC, new Department())));
-        //when
+        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(new Employee()));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO(
+                1L, "name", "lastname", "MANAGER", new DepartmentDTO()));        //when
         EmployeeDTO employee = employeeModifyService.promoteEmployee(1L);
         //then
         assertThat(employee.getPosition()).isEqualTo(EmployeePosition.MANAGER.toString());
@@ -78,8 +81,9 @@ class EmployeeModifyServiceTest {
     @Test
     void demoteEmployeeById_callsEmployeeRepositoryAndUpdatesEmployeePosition() {
         //given
-        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(
-                new Employee(1L, "name", "lastname", EmployeePosition.MANAGER, new Department())));
+        when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(new Employee()));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO(
+                1L, "name", "lastname", "BASIC", new DepartmentDTO()));
         //when
         EmployeeDTO employeeDTO = employeeModifyService.demoteEmployee(1L);
         //then

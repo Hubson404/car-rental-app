@@ -3,6 +3,7 @@ package org.hubson404.carrentalapp.customer;
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
 import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,8 @@ class CustomerModifyServiceTest {
 
     @Mock
     CustomerRepository customerRepository;
+    @Mock
+    CustomerMapper customerMapper;
     @InjectMocks
     CustomerModifyService customerModifyService;
 
@@ -41,6 +44,8 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerFirstName_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
         CustomerDTO customerDTO = CustomerDTO.builder().firstName("testName").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
@@ -66,6 +71,8 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerLastName_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
         CustomerDTO customerDTO = CustomerDTO.builder().lastName("testLastName").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
@@ -91,6 +98,8 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerEmail_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
         CustomerDTO customerDTO = CustomerDTO.builder().email("testEmail").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
@@ -117,6 +126,8 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerAddress_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
         CustomerDTO customerDTO = CustomerDTO.builder().address("testAddress").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
