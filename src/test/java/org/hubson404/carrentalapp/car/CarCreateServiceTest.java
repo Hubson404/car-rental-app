@@ -124,7 +124,7 @@ class CarCreateServiceTest {
                 null, "Mmm", "Bbb", "COUPE", 1999,
                 "BLK", null, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
         // when
-        Car car = carCreateService.createCar(carDTO);
+        carCreateService.createCar(carDTO);
         // then
         verify(carRepository, times(1)).save(any(Car.class));
     }

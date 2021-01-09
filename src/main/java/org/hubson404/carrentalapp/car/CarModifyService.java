@@ -10,6 +10,7 @@ import org.hubson404.carrentalapp.domain.enums.CarStatus;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class CarModifyService {
 
     private final CarRepository carRepository;
     private final DepartmentRepository departmentRepository;
+    private final CarMapper carMapper;
 
 
     public void deleteCarById(Long id) {
@@ -35,7 +37,7 @@ public class CarModifyService {
                 });
     }
 
-    public Car modifyCar(Long id, CarDTO carDTO) {
+    public CarDTO modifyCar(Long id, CarDTO carDTO) {
 
         Car foundCar = carRepository.findById(id).orElseThrow(
                 () -> new CarNotFoundException("Could not find Car with id: " + id));
@@ -108,6 +110,8 @@ public class CarModifyService {
             foundCar.setDepartment(department);
         }
 
-        return carRepository.save(foundCar);
+        Car savedCar = carRepository.save(foundCar);
+
+        return carMapper.toCarDTO(savedCar);
     }
 }

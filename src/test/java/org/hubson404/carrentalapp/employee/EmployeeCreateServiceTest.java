@@ -38,14 +38,13 @@ class EmployeeCreateServiceTest {
         when(employeeRepository.save(any(Employee.class))).thenReturn(new Employee());
         when(employeeMapper.toEmployee(any())).thenReturn(new Employee());
         // when
-        Employee result = employeeCreateService.createEmployee(
+        employeeCreateService.createEmployee(
                 EmployeeDTO.builder()
                         .firstName("testFirstName")
                         .lastName("testLastName")
                         .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
                         .build());
         // then
-        assertThat(result).isInstanceOf(Employee.class);
         verify(employeeRepository, times(1)).save(any(Employee.class));
     }
 

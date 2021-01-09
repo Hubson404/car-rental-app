@@ -32,7 +32,7 @@ class EmployeeFetchServiceTest {
         // given
         when(employeeRepository.findAll()).thenReturn(new ArrayList<>());
         // when
-        List<Employee> result = employeeRepository.findAll();
+        employeeRepository.findAll();
         // then
         verify(employeeRepository, times(1)).findAll();
     }
@@ -42,9 +42,8 @@ class EmployeeFetchServiceTest {
         // given
         when(employeeRepository.findById(anyLong())).thenReturn(Optional.of(new Employee()));
         // when
-        Employee result = employeeFetchService.findEmployeeById(anyLong());
+        employeeFetchService.findEmployeeById(anyLong());
         // then
-        assertThat(result).isInstanceOf(Employee.class);
         verify(employeeRepository, times(1)).findById(anyLong());
     }
 
@@ -64,9 +63,8 @@ class EmployeeFetchServiceTest {
         // given
         when(employeeRepository.findEmployeeByDepartment_Id(anyLong())).thenReturn(List.of(new Employee()));
         // when
-        List<Employee> result = employeeFetchService.findEmployeeByDepartmentId(anyLong());
+        employeeFetchService.findEmployeeByDepartmentId(anyLong());
         // then
-        assertThat(result.get(0)).isInstanceOf(Employee.class);
         verify(employeeRepository, times(1)).findEmployeeByDepartment_Id(anyLong());
     }
 
@@ -77,9 +75,8 @@ class EmployeeFetchServiceTest {
                 .thenReturn(List.of(new Employee(
                         1L, "name", "name", EmployeePosition.MANAGER, new Department())));
         // when
-        List<Employee> result = employeeFetchService.findManagersInDepartmentById(1L);
+        employeeFetchService.findManagersInDepartmentById(1L);
         // then
-        assertThat(result.get(0).getPosition()).isEqualTo(EmployeePosition.MANAGER);
         verify(employeeRepository, times(1))
                 .findEmployeesByDepartmentIdAndPosition(anyLong(), any());
     }

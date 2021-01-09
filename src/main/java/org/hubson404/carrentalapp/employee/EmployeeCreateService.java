@@ -24,7 +24,7 @@ public class EmployeeCreateService {
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
 
-    public Employee createEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
 
         if (employeeDTO.getFirstName() == null || employeeDTO.getFirstName().isBlank()) {
             throw new InsufficientDataException("Employees first name must be specified.");
@@ -47,7 +47,8 @@ public class EmployeeCreateService {
                 "Could not find department with id: " + employeeDTO.getDepartment().getId()));
         createdEmployee.setDepartment(department);
 
-        return employeeRepository.save(createdEmployee);
+        Employee savedEmployee = employeeRepository.save(createdEmployee);
+        return employeeMapper.toEmployeeDTO(savedEmployee);
 
     }
 }

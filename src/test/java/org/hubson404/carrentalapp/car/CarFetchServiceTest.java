@@ -38,7 +38,7 @@ class CarFetchServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         // when
-        Car result = carFetchService.findCarById(anyLong());
+        carFetchService.findCarById(anyLong());
         // then
         verify(carRepository, times(1)).findById(anyLong());
     }

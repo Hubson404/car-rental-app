@@ -5,6 +5,7 @@ import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.IllegalEmployeeIdException;
+import org.hubson404.carrentalapp.model.EmployeeDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,9 +58,9 @@ class EmployeeModifyServiceTest {
         when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(
                 new Employee(1L, "name", "lastname", EmployeePosition.BASIC, new Department())));
         //when
-        Employee employee = employeeModifyService.promoteEmployee(1L);
+        EmployeeDTO employee = employeeModifyService.promoteEmployee(1L);
         //then
-        assertThat(employee.getPosition()).isEqualTo(EmployeePosition.MANAGER);
+        assertThat(employee.getPosition()).isEqualTo(EmployeePosition.MANAGER.toString());
         verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());
     }
 
@@ -80,9 +81,9 @@ class EmployeeModifyServiceTest {
         when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(
                 new Employee(1L, "name", "lastname", EmployeePosition.MANAGER, new Department())));
         //when
-        Employee employee = employeeModifyService.demoteEmployee(1L);
+        EmployeeDTO employeeDTO = employeeModifyService.demoteEmployee(1L);
         //then
-        assertThat(employee.getPosition()).isEqualTo(EmployeePosition.BASIC);
+        assertThat(employeeDTO.getPosition()).isEqualTo(EmployeePosition.BASIC.toString());
         verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());
     }
 

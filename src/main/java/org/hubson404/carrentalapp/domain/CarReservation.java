@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity(name = "car_reservations")
@@ -26,16 +23,16 @@ public class CarReservation {
     @CreationTimestamp
     private Instant reservationCreateDate;
 
-    @OneToOne
+    @ManyToOne
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     private Car car;
     private Instant rentalStartingDate;
     private Instant returnDate;
 
     @OneToOne
-    private Department carHireDepartment; //stream check latest car reservations for carReturnDepartment
+    private Department carRentalDepartment; //stream check latest car reservations for carReturnDepartment
 
     @OneToOne
     private Department carReturnDepartment;

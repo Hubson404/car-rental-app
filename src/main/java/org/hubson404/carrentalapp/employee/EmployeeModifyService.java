@@ -6,6 +6,8 @@ import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.IllegalEmployeeIdException;
+import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,23 +19,24 @@ import java.util.Optional;
 public class EmployeeModifyService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
 
-    public Employee promoteEmployee(Long id) {
+    public EmployeeDTO promoteEmployee(Long id) {
 
         Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.BASIC);
         Employee employee = optionalEmployee.orElseThrow(() -> new IllegalEmployeeIdException(
                 "Could not find employee by given id or employee position is already set to 'MANAGER'."));
         employee.setPosition(EmployeePosition.MANAGER);
-        return employee;
+        return employeeMapper.toEmployeeDTO(employee);
     }
 
-    public Employee demoteEmployee(Long id) {
+    public EmployeeDTO demoteEmployee(Long id) {
 
         Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByIdAndPosition(id, EmployeePosition.MANAGER);
         Employee employee = optionalEmployee.orElseThrow(() -> new IllegalEmployeeIdException(
                 "Could not find employee by given id or employee position is already set to 'BASIC'."));
         employee.setPosition(EmployeePosition.BASIC);
-        return employee;
+        return employeeMapper.toEmployeeDTO(employee);
     }
 
     public void deleteEmployeeById(Long id) {

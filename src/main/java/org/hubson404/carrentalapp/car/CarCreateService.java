@@ -25,7 +25,7 @@ public class CarCreateService {
     private final DepartmentRepository departmentRepository;
     private final CarMapper carMapper;
 
-    public Car createCar(CarDTO carDTO) {
+    public CarDTO createCar(CarDTO carDTO) {
 
         if (carDTO.getBrand() == null || carDTO.getBrand().isBlank()) {
             throw new InsufficientDataException("Car brand must be specified");
@@ -65,7 +65,8 @@ public class CarCreateService {
                 "Could not find department with id: " + carDTO.getDepartment().getId()));
         createdCar.setDepartment(department);
 
-        return carRepository.save(createdCar);
+        Car save = carRepository.save(createdCar);
+        return carMapper.toCarDTO(save);
 
     }
 }

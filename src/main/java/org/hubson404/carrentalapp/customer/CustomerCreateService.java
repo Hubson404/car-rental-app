@@ -14,7 +14,7 @@ public class CustomerCreateService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
-    public Customer createCustomer(CustomerDTO customerDTO) {
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
 
         if (customerDTO.getFirstName() == null || customerDTO.getFirstName().isBlank()) {
             throw new InsufficientDataException("Customer first name must be specified.");
@@ -30,7 +30,8 @@ public class CustomerCreateService {
         }
 
         Customer createdCustomer = customerMapper.toCustomer(customerDTO);
+        Customer savedCustomer = customerRepository.save(createdCustomer);
 
-        return customerRepository.save(createdCustomer);
+        return customerMapper.toCustomerDTO(savedCustomer);
     }
 }

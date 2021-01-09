@@ -1,14 +1,11 @@
 package org.hubson404.carrentalapp.customer;
 
 import lombok.RequiredArgsConstructor;
-import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.model.CustomerDTO;
-import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,31 +14,27 @@ public class CustomerController {
     private final CustomerCreateService customerCreateService;
     private final CustomerFetchService customerFetchService;
     private final CustomerModifyService customerModifyService;
-    private final CustomerMapper customerMapper;
 
     @GetMapping("/customers")
     public List<CustomerDTO> findAll() {
-        List<Customer> customers = customerFetchService.findAll();
-        return toCustomerDtoList(customers);
+        return customerFetchService.findAll();
     }
 
     @GetMapping("/customers/{id}")
     public CustomerDTO findCustomerById(@PathVariable Long id) {
-        return customerMapper.toCustomerDTO(customerFetchService.findCustomerById(id));
+        return customerFetchService.findCustomerById(id);
     }
 
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO createCustomer(@RequestBody CustomerDTO customerDTO) {
-        Customer createdCustomer = customerCreateService.createCustomer(customerDTO);
-        return customerMapper.toCustomerDTO(createdCustomer);
+        return customerCreateService.createCustomer(customerDTO);
     }
 
     @PatchMapping("/customers/{id}/modify")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CustomerDTO modifyCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
-        Customer modifiedCustomer = customerModifyService.modifyCustomer(id, customerDTO);
-        return customerMapper.toCustomerDTO(modifiedCustomer);
+        return customerModifyService.modifyCustomer(id, customerDTO);
     }
 
     @DeleteMapping("/customers/{id}")
@@ -49,7 +42,5 @@ public class CustomerController {
         customerModifyService.deleteCustomerById(id);
     }
 
-    private List<CustomerDTO> toCustomerDtoList(List<Customer> customers) {
-        return customers.stream().map(customerMapper::toCustomerDTO).collect(Collectors.toList());
-    }
+
 }
