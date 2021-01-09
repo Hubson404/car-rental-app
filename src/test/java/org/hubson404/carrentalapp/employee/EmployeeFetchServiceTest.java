@@ -4,13 +4,14 @@ import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
+import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,15 +25,18 @@ class EmployeeFetchServiceTest {
 
     @Mock
     EmployeeRepository employeeRepository;
+    @Mock
+    EmployeeMapper employeeMapper;
     @InjectMocks
     EmployeeFetchService employeeFetchService;
 
     @Test
     void findAll_callsEmployeeRepository() {
         // given
-        when(employeeRepository.findAll()).thenReturn(new ArrayList<>());
+        when(employeeRepository.findAll()).thenReturn(List.of(new Employee(), new Employee()));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO());
         // when
-        employeeRepository.findAll();
+        employeeFetchService.findAll();
         // then
         verify(employeeRepository, times(1)).findAll();
     }
@@ -41,6 +45,7 @@ class EmployeeFetchServiceTest {
     void findEmployeeById_callsEmployeeRepository() {
         // given
         when(employeeRepository.findById(anyLong())).thenReturn(Optional.of(new Employee()));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO());
         // when
         employeeFetchService.findEmployeeById(anyLong());
         // then
@@ -62,6 +67,7 @@ class EmployeeFetchServiceTest {
     void findEmployeeByDepartmentId_CallsEmployeeRepositoryAndReturnsListOfEmployees() {
         // given
         when(employeeRepository.findEmployeeByDepartment_Id(anyLong())).thenReturn(List.of(new Employee()));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO());
         // when
         employeeFetchService.findEmployeeByDepartmentId(anyLong());
         // then
@@ -74,6 +80,7 @@ class EmployeeFetchServiceTest {
         when(employeeRepository.findEmployeesByDepartmentIdAndPosition(anyLong(), any()))
                 .thenReturn(List.of(new Employee(
                         1L, "name", "name", EmployeePosition.MANAGER, new Department())));
+        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO());
         // when
         employeeFetchService.findManagersInDepartmentById(1L);
         // then

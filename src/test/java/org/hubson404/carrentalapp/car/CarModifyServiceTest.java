@@ -7,6 +7,7 @@ import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.model.CarDTO;
 import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,8 @@ class CarModifyServiceTest {
 
     @Mock
     CarRepository carRepository;
+    @Mock
+    CarMapper carMapper;
     @Mock
     DepartmentRepository departmentRepository;
     @InjectMocks
@@ -46,6 +49,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarBrand_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().brand("Audi").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -71,6 +76,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarModel_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().model("S5").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -96,6 +103,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarProductionYear_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().productionYear(1999).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -134,6 +143,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarMileage_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().mileage(100L).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -159,6 +170,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarCostPerDay_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().costPerDay(100d).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -184,6 +197,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarBodyType_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().carBodyType("COUPE").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -209,6 +224,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarBodyColor_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().color("BLACK").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -234,6 +251,8 @@ class CarModifyServiceTest {
     void modifyCar_changeCarStatus_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().carStatus("AVAILABLE").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
@@ -260,6 +279,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
+        when(carRepository.save(any(Car.class))).thenReturn(new Car());
+        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
         CarDTO carDTO = CarDTO.builder().department(new DepartmentDTO(1L, null)).build();
         // when
         carModifyService.modifyCar(1L, carDTO);

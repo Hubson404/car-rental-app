@@ -2,13 +2,15 @@ package org.hubson404.carrentalapp.customer;
 
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
+import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,13 +22,16 @@ class CustomerFetchServiceTest {
 
     @Mock
     CustomerRepository customerRepository;
+    @Mock
+    CustomerMapper customerMapper;
     @InjectMocks
     CustomerFetchService customerFetchService;
 
     @Test
     void findAll_callsRepository() {
         // given
-        when(customerRepository.findAll()).thenReturn(new ArrayList<>());
+        when(customerRepository.findAll()).thenReturn(List.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
         // when
         customerFetchService.findAll();
         // then
@@ -37,6 +42,7 @@ class CustomerFetchServiceTest {
     void findCustomerById_callsCarRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
+        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
         // when
         customerFetchService.findCustomerById(anyLong());
         // then
