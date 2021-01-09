@@ -110,7 +110,7 @@ class CustomerIntegrationTest {
         // when
         String requestBody = objectMapper.writeValueAsString(customerDTO);
 
-        MockHttpServletRequestBuilder patch = patch("/customers/" + savedCustomerId + "/modify")
+        MockHttpServletRequestBuilder patch = patch("/customers/" + savedCustomerId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
         MvcResult result = mockMvc.perform(patch).andReturn();

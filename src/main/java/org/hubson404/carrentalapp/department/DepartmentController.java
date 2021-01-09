@@ -18,8 +18,11 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping("/departments")
-    public List<DepartmentDTO> findAll() {
-        return departmentService.findAll();
+    public DepartmentCollection findAll() {
+        List<DepartmentDTO> all = departmentService.findAll();
+        DepartmentCollection departmentCollection = new DepartmentCollection();
+        departmentCollection.setDepartments(all);
+        return departmentCollection;
     }
 
     @GetMapping("/departments/{id}")

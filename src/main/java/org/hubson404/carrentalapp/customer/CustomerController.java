@@ -16,8 +16,11 @@ public class CustomerController {
     private final CustomerModifyService customerModifyService;
 
     @GetMapping("/customers")
-    public List<CustomerDTO> findAll() {
-        return customerFetchService.findAll();
+    public CustomerCollection findAll() {
+        List<CustomerDTO> all = customerFetchService.findAll();
+        CustomerCollection customerCollection = new CustomerCollection();
+        customerCollection.setCustomers(all);
+        return customerCollection;
     }
 
     @GetMapping("/customers/{id}")
@@ -31,7 +34,7 @@ public class CustomerController {
         return customerCreateService.createCustomer(customerDTO);
     }
 
-    @PatchMapping("/customers/{id}/modify")
+    @PatchMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CustomerDTO modifyCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
         return customerModifyService.modifyCustomer(id, customerDTO);
