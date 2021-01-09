@@ -17,8 +17,11 @@ public class CarController {
 
 
     @GetMapping("/cars")
-    public List<CarDTO> findAllCars() {
-        return carFetchService.findAllCars();
+    public CarCollection findAllCars() {
+        List<CarDTO> allCars = carFetchService.findAllCars();
+        CarCollection carCollection = new CarCollection();
+        carCollection.setCars(allCars);
+        return carCollection;
     }
 
     @GetMapping("/cars/{id}")
@@ -32,7 +35,7 @@ public class CarController {
         return carCreateService.createCar(carDTO);
     }
 
-    @PatchMapping("/cars/{id}/modify")
+    @PatchMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CarDTO modifyCar(@PathVariable Long id, @RequestBody CarDTO carDTO) {
         return carModifyservice.modifyCar(id, carDTO);

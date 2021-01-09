@@ -22,8 +22,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public List<EmployeeDTO> findAll() {
-        return employeeFetchService.findAll();
+    public EmployeeCollection findAll() {
+        List<EmployeeDTO> all = employeeFetchService.findAll();
+        EmployeeCollection employeeCollection = new EmployeeCollection();
+        employeeCollection.setEmployees(all);
+        return employeeCollection;
     }
 
     @GetMapping("/employees/{id}")

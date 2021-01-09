@@ -131,7 +131,7 @@ class CarIntegrationTest {
         // when
         String requestBody = objectMapper.writeValueAsString(carDTO);
 
-        MockHttpServletRequestBuilder patch = patch("/cars/" + savedCarId + "/modify")
+        MockHttpServletRequestBuilder patch = patch("/cars/" + savedCarId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
         MvcResult result = mockMvc.perform(patch).andReturn();
