@@ -28,11 +28,14 @@ public class CarReservation {
 
     @ManyToOne
     private Car car;
+
     private Instant rentalStartingDate;
     private Instant returnDate;
 
     @OneToOne
     private Department carRentalDepartment; //stream check latest car reservations for carReturnDepartment
+
+    private boolean canceled;
 
     @OneToOne
     private Department carReturnDepartment;

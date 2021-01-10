@@ -24,4 +24,6 @@ public class CarReservationDTO {
     private DepartmentDTO carReturnDepartment;
 
     private Double totalCost;
+
+    private boolean canceled;
 }
