@@ -14,14 +14,14 @@ public class CarReservationDTO {
     private Long id;
     private String reservationCreateDate;
 
-    private CustomerDTO customer;
-    private CarDTO car;
+    private CustomerDto customer;
+    private CarDto car;
 
     private String rentalStartingDate;
     private String returnDate;
 
-    private DepartmentDTO carRentalDepartment;
-    private DepartmentDTO carReturnDepartment;
+    private DepartmentDto carRentalDepartment;
+    private DepartmentDto carReturnDepartment;
 
     private Double totalCost;
 
