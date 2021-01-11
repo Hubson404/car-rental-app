@@ -9,7 +9,7 @@ import org.hubson404.carrentalapp.domain.enums.CarBodyType;
 import org.hubson404.carrentalapp.domain.enums.CarStatus;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +33,14 @@ public class CarModifyService {
         carRepository.findById(id).ifPresentOrElse(
                 car -> carRepository.deleteById(car.getId()),
                 () -> {
-                    throw new CarNotFoundException("Could not find Car with id: " + id);
+                    throw new CarNotFoundException(id);
                 });
     }
 
-    public CarDTO modifyCar(Long id, CarDTO carDTO) {
+    public CarDto modifyCar(Long id, CarDto carDTO) {
 
         Car foundCar = carRepository.findById(id).orElseThrow(
-                () -> new CarNotFoundException("Could not find Car with id: " + id));
+                () -> new CarNotFoundException(id));
 
         if (carDTO.getBrand() != null) {
             if (carDTO.getBrand().isBlank()) {
@@ -106,12 +106,12 @@ public class CarModifyService {
         if (carDTO.getDepartment() != null && carDTO.getDepartment().getId() != null) {
             Optional<Department> byId = departmentRepository.findById(carDTO.getDepartment().getId());
             Department department = byId.orElseThrow(
-                    () -> new DepartmentNotFoundException("Given Department was not found"));
+                    () -> new DepartmentNotFoundException(carDTO.getDepartment().getId()));
             foundCar.setDepartment(department);
         }
 
         Car savedCar = carRepository.save(foundCar);
 
-        return carMapper.toCarDTO(savedCar);
+        return carMapper.toCarDto(savedCar);
     }
 }

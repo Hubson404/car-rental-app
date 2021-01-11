@@ -6,13 +6,11 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Year;
 import java.util.Optional;
 
 @Slf4j
@@ -25,48 +23,27 @@ public class CarCreateService {
     private final DepartmentRepository departmentRepository;
     private final CarMapper carMapper;
 
-    public CarDTO createCar(CarDTO carDTO) {
+    public CarDto createCar(CarDto carDTO) {
+        checkMileage(carDTO);
+        Car createdCar = getDepartmentFromRepository(carDTO);
+        Car savedCar = carRepository.save(createdCar);
+        return carMapper.toCarDto(savedCar);
+    }
 
-        if (carDTO.getBrand() == null || carDTO.getBrand().isBlank()) {
-            throw new InsufficientDataException("Car brand must be specified");
-        }
-        if (carDTO.getModel() == null || carDTO.getModel().isBlank()) {
-            throw new InsufficientDataException("Car model must be specified");
-        }
-        if (carDTO.getProductionYear() == null) {
-            throw new InsufficientDataException("Car production year must be specified");
-        } else if (carDTO.getProductionYear() > Year.now().getValue()) {
-            throw new IllegalArgumentException("Car production year cannot be greater than current year");
-        }
+    private void checkMileage(CarDto carDTO) {
         if (carDTO.getMileage() == null) {
             log.info("Mileage was not specified, setting mileage to '0km'");
             carDTO.setMileage(0L);
         }
-        if (carDTO.getCostPerDay() == null || carDTO.getCostPerDay().equals(0d)) {
-            throw new InsufficientDataException("Car cost per day must be specified");
-        }
-        if (carDTO.getCarBodyType() == null || carDTO.getCarBodyType().isBlank()) {
-            throw new InsufficientDataException("Car body type must be specified");
-        }
-        if (carDTO.getColor() == null || carDTO.getColor().isBlank()) {
-            throw new InsufficientDataException("Car color type must be specified");
-        }
-        if (carDTO.getCarStatus() == null || carDTO.getCarStatus().isBlank()) {
-            throw new InsufficientDataException("Car status type must be specified");
-        }
-        if (carDTO.getDepartment() == null) {
-            throw new InsufficientDataException("Initial department must be specified");
-        }
+    }
 
-        Car createdCar = carMapper.toCar(carDTO);
-
-        Optional<Department> optionalDepartment = departmentRepository.findById(carDTO.getDepartment().getId());
-        Department department = optionalDepartment.orElseThrow(() -> new DepartmentNotFoundException(
-                "Could not find department with id: " + carDTO.getDepartment().getId()));
-        createdCar.setDepartment(department);
-
-        Car save = carRepository.save(createdCar);
-        return carMapper.toCarDTO(save);
-
+    private Car getDepartmentFromRepository(CarDto carDto) {
+        Car createdCar = carMapper.toCar(carDto);
+        Optional<Department> byId = departmentRepository.findById(carDto.getDepartment().getId());
+        byId.ifPresentOrElse(createdCar::setDepartment,
+                () -> {
+                    throw new DepartmentNotFoundException(carDto.getDepartment().getId());
+                });
+        return createdCar;
     }
 }

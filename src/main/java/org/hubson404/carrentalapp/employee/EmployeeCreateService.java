@@ -6,8 +6,7 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.EmployeeDto;
 import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,31 +23,31 @@ public class EmployeeCreateService {
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
 
-    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDto createEmployee(EmployeeDto employeeDTO) {
 
-        if (employeeDTO.getFirstName() == null || employeeDTO.getFirstName().isBlank()) {
-            throw new InsufficientDataException("Employees first name must be specified.");
-        }
-        if (employeeDTO.getLastName() == null || employeeDTO.getLastName().isBlank()) {
-            throw new InsufficientDataException("Employees last name must be specified.");
-        }
-        if (employeeDTO.getDepartment() == null) {
-            throw new InsufficientDataException("Employees department must be specified.");
-        }
+        checkPosition(employeeDTO);
+        Employee createdEmployee = getDepartmentFromRepository(employeeDTO);
+
+        Employee savedEmployee = employeeRepository.save(createdEmployee);
+        return employeeMapper.toEmployeeDto(savedEmployee);
+    }
+
+    private void checkPosition(EmployeeDto employeeDTO) {
         if (employeeDTO.getPosition() == null) {
             log.info("Position was not specified, setting position to 'BASIC'");
             employeeDTO.setPosition("BASIC");
         }
+    }
+
+    private Employee getDepartmentFromRepository(EmployeeDto employeeDTO) {
 
         Employee createdEmployee = employeeMapper.toEmployee(employeeDTO);
-
         Optional<Department> byId = departmentRepository.findById(employeeDTO.getDepartment().getId());
-        Department department = byId.orElseThrow(() -> new DepartmentNotFoundException(
-                "Could not find department with id: " + employeeDTO.getDepartment().getId()));
-        createdEmployee.setDepartment(department);
 
-        Employee savedEmployee = employeeRepository.save(createdEmployee);
-        return employeeMapper.toEmployeeDTO(savedEmployee);
-
+        byId.ifPresentOrElse(createdEmployee::setDepartment,
+                () -> {
+                    throw new DepartmentNotFoundException(employeeDTO.getDepartment().getId());
+                });
+        return createdEmployee;
     }
 }

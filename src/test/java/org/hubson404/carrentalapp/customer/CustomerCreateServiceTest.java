@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.customer;
 
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +28,8 @@ class CustomerCreateServiceTest {
     @Test
     void createCustomer_callsCustomerRepository() {
         // given
-        when(customerMapper.toCustomer(any(CustomerDTO.class))).thenReturn(new Customer());
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        when(customerMapper.toCustomer(any(CustomerDto.class))).thenReturn(new Customer());
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("testFirstName")
                 .lastName("testLastName")
                 .email("testEmail")
@@ -44,7 +44,7 @@ class CustomerCreateServiceTest {
     @Test
     void createCustomer_whenFirstNameFieldIsBlank_ThrowsExceptionAndDoesNotCallRepository() {
         // given
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("  ")
                 .lastName("testLastName")
                 .email("testEmail")
@@ -61,7 +61,7 @@ class CustomerCreateServiceTest {
     @Test
     void createCustomer_whenLastNameFieldIsBlank_ThrowsExceptionAndDoesNotCallRepository() {
         // given
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("testFirstName")
                 .lastName("  ")
                 .email("testEmail")
@@ -78,7 +78,7 @@ class CustomerCreateServiceTest {
     @Test
     void createCustomer_whenEmailFieldIsBlank_ThrowsExceptionAndDoesNotCallRepository() {
         // given
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("testFirstName")
                 .lastName("testLastName")
                 .email("  ")
@@ -95,7 +95,7 @@ class CustomerCreateServiceTest {
     @Test
     void createCustomer_whenAddressFieldIsBlank_ThrowsExceptionAndDoesNotCallRepository() {
         // given
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("testFirstName")
                 .lastName("testLastName")
                 .email("testEmail")

@@ -5,8 +5,8 @@ import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.model.CarDTO;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.CarDto;
+import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
         // when
-        Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, new CarDTO()));
+        Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, new CarDto()));
         // then
         assertThat(result).isExactlyInstanceOf(CarNotFoundException.class);
         verify(carRepository, times(1)).findById(anyLong());
@@ -50,8 +50,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().brand("Audi").build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().brand("Audi").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -63,7 +63,7 @@ class CarModifyServiceTest {
     void modifyCar_carBrandIsBlank_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().brand("  ").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().brand("  ").build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -77,8 +77,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().model("S5").build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().model("S5").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -90,7 +90,7 @@ class CarModifyServiceTest {
     void modifyCar_carModelIsBlank_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().model("  ").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().model("  ").build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -104,8 +104,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().productionYear(1999).build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().productionYear(1999).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -117,7 +117,7 @@ class CarModifyServiceTest {
     void modifyCar_CarProductionYearIsSetToLessThan1950_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().productionYear(1400).build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().productionYear(1400).build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -130,7 +130,7 @@ class CarModifyServiceTest {
     void modifyCar_CarProductionYearIsGreaterThanCurrentYear_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().productionYear(1400).build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().productionYear(1400).build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -144,8 +144,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().mileage(100L).build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().mileage(100L).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -157,7 +157,7 @@ class CarModifyServiceTest {
     void modifyCar_carMileageToNegativeValue_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().mileage(-100L).build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().mileage(-100L).build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -171,8 +171,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().costPerDay(100d).build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().costPerDay(100d).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -184,7 +184,7 @@ class CarModifyServiceTest {
     void modifyCar_carCostPerDaySetToLessThanZero_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().costPerDay(-100d).build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().costPerDay(-100d).build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -198,8 +198,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().carBodyType("COUPE").build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().carBodyType("COUPE").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -211,7 +211,7 @@ class CarModifyServiceTest {
     void modifyCar_CarBodyTypeIsInvalid_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().carBodyType("NONE").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().carBodyType("NONE").build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -225,8 +225,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().color("BLACK").build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().color("BLACK").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -238,7 +238,7 @@ class CarModifyServiceTest {
     void modifyCar_CarBodyColorIsInvalid_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().color("NEON_GREEN").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().color("NEON_GREEN").build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -252,8 +252,8 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().carStatus("AVAILABLE").build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().carStatus("AVAILABLE").build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -265,7 +265,7 @@ class CarModifyServiceTest {
     void modifyCar_changeCarStatusIsInvalid_CallsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        CarDTO carDTO = CarDTO.builder().carStatus("INVALID_STATUS").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().carStatus("INVALID_STATUS").build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then
@@ -280,8 +280,8 @@ class CarModifyServiceTest {
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
-        CarDTO carDTO = CarDTO.builder().department(new DepartmentDTO(1L, null)).build();
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().department(new DepartmentDto(1L, null)).build();
         // when
         carModifyService.modifyCar(1L, carDTO);
         // then
@@ -294,7 +294,7 @@ class CarModifyServiceTest {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        CarDTO carDTO = CarDTO.builder().department(new DepartmentDTO(1L, null)).build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().department(new DepartmentDto(1L, null)).build();
         // when
         Throwable result = catchThrowable(() -> carModifyService.modifyCar(1L, carDTO));
         // then

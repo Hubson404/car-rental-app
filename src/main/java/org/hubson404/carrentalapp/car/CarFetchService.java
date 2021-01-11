@@ -3,7 +3,7 @@ package org.hubson404.carrentalapp.car;
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +20,14 @@ public class CarFetchService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
-    public CarDTO findCarById(Long id) {
+    public CarDto findCarById(Long id) {
         Optional<Car> carRepositoryById = carRepository.findById(id);
-        Car car = carRepositoryById.orElseThrow(() -> new CarNotFoundException("Could not find Car by id: " + id));
-        return carMapper.toCarDTO(car);
+        Car car = carRepositoryById.orElseThrow(() -> new CarNotFoundException(id));
+        return carMapper.toCarDto(car);
     }
 
-    public List<CarDTO> findAllCars() {
+    public List<CarDto> findAllCars() {
         List<Car> all = carRepository.findAll();
-        return all.stream().map(carMapper::toCarDTO).collect(Collectors.toList());
+        return all.stream().map(carMapper::toCarDto).collect(Collectors.toList());
     }
 }

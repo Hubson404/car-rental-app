@@ -3,7 +3,7 @@ package org.hubson404.carrentalapp.department;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class DepartmentServiceTest {
         // given
         when(departmentRepository.findAll()).thenReturn(new ArrayList<>());
         // when
-        List<DepartmentDTO> result = departmentService.findAll();
+        List<DepartmentDto> result = departmentService.findAll();
         // then
         verify(departmentRepository, times(1)).findAll();
     }
@@ -44,13 +44,13 @@ class DepartmentServiceTest {
     void createDepartment_callsDepartmentRepository() {
         // given
         when(departmentRepository.save(any(Department.class))).thenReturn(new Department());
-        when(departmentMapper.toDepartment(any(DepartmentDTO.class))).thenReturn(new Department());
-        when(departmentMapper.toDepartmentDTO(any(Department.class))).thenReturn(new DepartmentDTO());
+        when(departmentMapper.toDepartment(any(DepartmentDto.class))).thenReturn(new Department());
+        when(departmentMapper.toDepartmentDto(any(Department.class))).thenReturn(new DepartmentDto());
         // when
-        DepartmentDTO result = departmentService.createDepartment(
-                new DepartmentDTO(null, "some address"));
+        DepartmentDto result = departmentService.createDepartment(
+                new DepartmentDto(null, "some address"));
         // then
-        assertThat(result).isInstanceOf(DepartmentDTO.class);
+        assertThat(result).isInstanceOf(DepartmentDto.class);
         verify(departmentRepository, times(1)).save(any(Department.class));
     }
 
@@ -59,7 +59,7 @@ class DepartmentServiceTest {
         // given
         // when
         Throwable result = catchThrowable(() -> departmentService.createDepartment(
-                new DepartmentDTO(null, " ")));
+                new DepartmentDto(null, " ")));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(departmentRepository, times(0)).save(any(Department.class));
@@ -70,7 +70,7 @@ class DepartmentServiceTest {
         // given
         // when
         Throwable result = catchThrowable(() -> departmentService.createDepartment(
-                new DepartmentDTO(null, null)));
+                new DepartmentDto(null, null)));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
         verify(departmentRepository, times(0)).save(any(Department.class));
@@ -80,11 +80,11 @@ class DepartmentServiceTest {
     void findDepartmentById_callsDepartmentRepository() {
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
-        when(departmentMapper.toDepartmentDTO(any(Department.class))).thenReturn(new DepartmentDTO());
+        when(departmentMapper.toDepartmentDto(any(Department.class))).thenReturn(new DepartmentDto());
         // when
-        DepartmentDTO result = departmentService.findDepartmentById(anyLong());
+        DepartmentDto result = departmentService.findDepartmentById(anyLong());
         // then
-        assertThat(result).isInstanceOf(DepartmentDTO.class);
+        assertThat(result).isInstanceOf(DepartmentDto.class);
         verify(departmentRepository, times(1)).findById(anyLong());
     }
 
@@ -103,11 +103,11 @@ class DepartmentServiceTest {
     void deleteDepartmentById_callsDepartmentRepository() {
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
-        when(departmentMapper.toDepartmentDTO(any(Department.class))).thenReturn(new DepartmentDTO());
+        when(departmentMapper.toDepartmentDto(any(Department.class))).thenReturn(new DepartmentDto());
         // when
-        DepartmentDTO result = departmentService.deleteDepartment(anyLong());
+        DepartmentDto result = departmentService.deleteDepartment(anyLong());
         // then
-        assertThat(result).isInstanceOf(DepartmentDTO.class);
+        assertThat(result).isInstanceOf(DepartmentDto.class);
         verify(departmentRepository, times(1)).findById(anyLong());
         verify(departmentRepository, times(1)).deleteById(anyLong());
     }
