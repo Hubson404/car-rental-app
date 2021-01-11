@@ -4,8 +4,8 @@ import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.exceptions.IllegalEmployeeIdException;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
-import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.DepartmentDto;
+import org.hubson404.carrentalapp.model.EmployeeDto;
 import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,9 +59,9 @@ class EmployeeModifyServiceTest {
     void promoteEmployeeById_callsEmployeeRepositoryAndUpdatesEmployeePosition() {
         //given
         when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(new Employee()));
-        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO(
-                1L, "name", "lastname", "MANAGER", new DepartmentDTO()));        //when
-        EmployeeDTO employee = employeeModifyService.promoteEmployee(1L);
+        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(new EmployeeDto(
+                1L, "name", "lastname", "MANAGER", new DepartmentDto()));        //when
+        EmployeeDto employee = employeeModifyService.promoteEmployee(1L);
         //then
         assertThat(employee.getPosition()).isEqualTo(EmployeePosition.MANAGER.toString());
         verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());
@@ -82,10 +82,10 @@ class EmployeeModifyServiceTest {
     void demoteEmployeeById_callsEmployeeRepositoryAndUpdatesEmployeePosition() {
         //given
         when(employeeRepository.findEmployeeByIdAndPosition(anyLong(), any())).thenReturn(Optional.of(new Employee()));
-        when(employeeMapper.toEmployeeDTO(any(Employee.class))).thenReturn(new EmployeeDTO(
-                1L, "name", "lastname", "BASIC", new DepartmentDTO()));
+        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(new EmployeeDto(
+                1L, "name", "lastname", "BASIC", new DepartmentDto()));
         //when
-        EmployeeDTO employeeDTO = employeeModifyService.demoteEmployee(1L);
+        EmployeeDto employeeDTO = employeeModifyService.demoteEmployee(1L);
         //then
         assertThat(employeeDTO.getPosition()).isEqualTo(EmployeePosition.BASIC.toString());
         verify(employeeRepository, times(1)).findEmployeeByIdAndPosition(anyLong(), any());

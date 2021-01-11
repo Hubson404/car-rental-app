@@ -4,8 +4,8 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
-import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.DepartmentDto;
+import org.hubson404.carrentalapp.model.EmployeeDto;
 import org.hubson404.carrentalapp.model.mappers.EmployeeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,10 +39,10 @@ class EmployeeCreateServiceTest {
         when(employeeMapper.toEmployee(any())).thenReturn(new Employee());
         // when
         employeeCreateService.createEmployee(
-                EmployeeDTO.builder()
+                EmployeeDto.builder()
                         .firstName("testFirstName")
                         .lastName("testLastName")
-                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .department(DepartmentDto.builder().id(1L).address("testAddress").build())
                         .build());
         // then
         verify(employeeRepository, times(1)).save(any(Employee.class));
@@ -56,10 +56,10 @@ class EmployeeCreateServiceTest {
         department.setAddress("Warsaw");
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                EmployeeDTO.builder()
+                EmployeeDto.builder()
                         .firstName("  ")
                         .lastName("testLastName")
-                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .department(DepartmentDto.builder().id(1L).address("testAddress").build())
                         .build()));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
@@ -74,10 +74,10 @@ class EmployeeCreateServiceTest {
         department.setAddress("Warsaw");
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                EmployeeDTO.builder()
+                EmployeeDto.builder()
                         .firstName("testFirstName")
                         .lastName("  ")
-                        .department(DepartmentDTO.builder().id(1L).address("testAddress").build())
+                        .department(DepartmentDto.builder().id(1L).address("testAddress").build())
                         .build()));
         // then
         assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
@@ -90,7 +90,7 @@ class EmployeeCreateServiceTest {
 
         // when
         Throwable result = catchThrowable(() -> employeeCreateService.createEmployee(
-                EmployeeDTO.builder()
+                EmployeeDto.builder()
                         .firstName("testFirstName")
                         .lastName("testLastName")
                         .build()));

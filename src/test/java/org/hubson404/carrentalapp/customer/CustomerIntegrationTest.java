@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.customer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hubson404.carrentalapp.domain.Customer;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,7 @@ class CustomerIntegrationTest {
         // given
         int expectedNumberOfEntriesInRepository = 1;
 
-        CustomerDTO customerDTO = CustomerDTO.builder()
+        CustomerDto customerDTO = CustomerDto.builder()
                 .firstName("testName")
                 .lastName("testLastName")
                 .email("testEmail")
@@ -106,7 +106,7 @@ class CustomerIntegrationTest {
                 "testEmail", "testAddress"));
         Long savedCustomerId = savedCustomer.getId();
 
-        CustomerDTO customerDTO = CustomerDTO.builder().firstName("modifiedName").build();
+        CustomerDto customerDTO = CustomerDto.builder().firstName("modifiedName").build();
         // when
         String requestBody = objectMapper.writeValueAsString(customerDTO);
 

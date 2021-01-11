@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.department;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hubson404.carrentalapp.domain.Department;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ class DepartmentIntegrationTest {
     void createNewDepartment_createsNewDepartmentAndReturnsStatusCode201() throws Exception {
         // given
         int expectedNumberOfEntriesInRepository = 1;
-        DepartmentDTO departmentDTO = DepartmentDTO.builder()
+        DepartmentDto departmentDTO = DepartmentDto.builder()
                 .address("some address")
                 .build();
 
@@ -84,7 +84,7 @@ class DepartmentIntegrationTest {
     void createNewDepartment_WhenAddressFieldIsBlank_ReturnsStatusCode400() throws Exception {
         // given
         int expectedNumberOfEntriesInRepository = 0;
-        DepartmentDTO departmentDTO = DepartmentDTO.builder()
+        DepartmentDto departmentDTO = DepartmentDto.builder()
                 .address(" ")
                 .build();
 
@@ -168,7 +168,7 @@ class DepartmentIntegrationTest {
         for (int i = 0; i < expectedNumberOfEntriesInRepository; i++) {
             departmentRepository.save(new Department());
         }
-        Long idOfNonexistentDepartment = 777L;
+        long idOfNonexistentDepartment = 777L;
 
         // when
         MockHttpServletRequestBuilder delete = delete("/departments/" + idOfNonexistentDepartment);

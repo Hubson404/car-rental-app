@@ -1,11 +1,10 @@
-package org.hubson404.carrentalapp.car;
-
+package org.hubson404.carrentalapp.customer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 
 import java.util.List;
 
@@ -13,9 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarCollection {
+public class CustomerWrapper {
 
-    private List<CarDTO> cars;
-
-
+    private List<CustomerDto> customers;
 }

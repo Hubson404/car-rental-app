@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.car;
 
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ class CarFetchServiceTest {
     void findAllCars_callsCarRepository() {
         // given
         when(carRepository.findAll()).thenReturn(List.of(new Car(), new Car()));
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
         // when
         carFetchService.findAllCars();
         // then
@@ -42,7 +42,7 @@ class CarFetchServiceTest {
     void findCarById_callsCarRepository() {
         // given
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(new Car()));
-        when(carMapper.toCarDTO(any(Car.class))).thenReturn(new CarDTO());
+        when(carMapper.toCarDto(any(Car.class))).thenReturn(new CarDto());
         // when
         carFetchService.findCarById(anyLong());
         // then

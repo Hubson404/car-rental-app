@@ -1,10 +1,11 @@
 package org.hubson404.carrentalapp.customer;
 
 import lombok.RequiredArgsConstructor;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,27 +17,27 @@ public class CustomerController {
     private final CustomerModifyService customerModifyService;
 
     @GetMapping("/customers")
-    public CustomerCollection findAll() {
-        List<CustomerDTO> all = customerFetchService.findAll();
-        CustomerCollection customerCollection = new CustomerCollection();
-        customerCollection.setCustomers(all);
-        return customerCollection;
+    public CustomerWrapper findAll() {
+        List<CustomerDto> all = customerFetchService.findAll();
+        CustomerWrapper customerWrapper = new CustomerWrapper();
+        customerWrapper.setCustomers(all);
+        return customerWrapper;
     }
 
     @GetMapping("/customers/{id}")
-    public CustomerDTO findCustomerById(@PathVariable Long id) {
+    public CustomerDto findCustomerById(@PathVariable Long id) {
         return customerFetchService.findCustomerById(id);
     }
 
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDTO createCustomer(@RequestBody CustomerDTO customerDTO) {
+    public CustomerDto createCustomer(@Valid @RequestBody CustomerDto customerDTO) {
         return customerCreateService.createCustomer(customerDTO);
     }
 
     @PatchMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public CustomerDTO modifyCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+    public CustomerDto modifyCustomer(@PathVariable Long id, @RequestBody CustomerDto customerDTO) {
         return customerModifyService.modifyCustomer(id, customerDTO);
     }
 

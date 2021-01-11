@@ -1,7 +1,7 @@
 package org.hubson404.carrentalapp.exceptions;
 
 public class CustomerNotFoundException extends RuntimeException {
-    public CustomerNotFoundException(String message) {
-        super(message);
+    public CustomerNotFoundException(Long message) {
+        super("Could not find customer with id: " + message);
     }
 }

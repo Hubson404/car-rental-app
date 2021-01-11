@@ -1,14 +1,14 @@
 package org.hubson404.carrentalapp.model.mappers;
 
 import org.hubson404.carrentalapp.domain.Customer;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface CustomerMapper {
 
-    Customer toCustomer(CustomerDTO customerDTO);
+    Customer toCustomer(CustomerDto customerDto);
 
-    CustomerDTO toCustomerDTO(Customer customer);
+    CustomerDto toCustomerDto(Customer customer);
 
 }

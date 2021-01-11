@@ -3,7 +3,7 @@ package org.hubson404.carrentalapp.customer;
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +18,14 @@ public class CustomerModifyService {
         customerRepository.findById(id)
                 .ifPresentOrElse(customer -> customerRepository.deleteById(id),
                         () -> {
-                            throw new CustomerNotFoundException("Could not find customer with id: " + id);
+                            throw new CustomerNotFoundException(id);
                         });
     }
 
-    public CustomerDTO modifyCustomer(Long id, CustomerDTO customerDTO) {
+    public CustomerDto modifyCustomer(Long id, CustomerDto customerDTO) {
 
         Customer foundCustomer = customerRepository.findById(id).orElseThrow(
-                () -> new CustomerNotFoundException("Could not find Customer with id: " + id));
+                () -> new CustomerNotFoundException(id));
 
         if (customerDTO.getFirstName() != null) {
             if (customerDTO.getFirstName().isBlank()) {
@@ -54,6 +54,6 @@ public class CustomerModifyService {
 
         Customer savedCustomer = customerRepository.save(foundCustomer);
 
-        return customerMapper.toCustomerDTO(savedCustomer);
+        return customerMapper.toCustomerDto(savedCustomer);
     }
 }
