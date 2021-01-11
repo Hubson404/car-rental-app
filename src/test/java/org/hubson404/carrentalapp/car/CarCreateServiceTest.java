@@ -4,8 +4,8 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.CarDTO;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.CarDto;
+import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +37,10 @@ class CarCreateServiceTest {
 
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
-        when(carMapper.toCar(any(CarDTO.class))).thenReturn(new Car());
-        CarDTO carDTO = new CarDTO(
+        when(carMapper.toCar(any(CarDto.class))).thenReturn(new Car());
+        CarDto carDTO = new CarDto(
                 null, "S5", "Audi", "COUPE", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         carCreateService.createCar(carDTO);
         // then
@@ -51,9 +51,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenModelFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "  ", "Aaa", "COUPE", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -64,9 +64,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenBrandFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "S5", "  ", "COUPE", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -77,9 +77,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenCarBodyTypeFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "  ", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -90,9 +90,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenProductionYearFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "Bdt", null,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -103,9 +103,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenCarBodyColorFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "  ", 1999,
-                "BLACK", 0L, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "BLACK", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -118,11 +118,11 @@ class CarCreateServiceTest {
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
         when(carRepository.save(any(Car.class))).thenReturn(new Car());
-        when(carMapper.toCar(any(CarDTO.class))).thenReturn(new Car());
+        when(carMapper.toCar(any(CarDto.class))).thenReturn(new Car());
 
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLK", null, "AVAILABLE", 100d, DepartmentDTO.builder().id(1L).build());
+                "BLK", null, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
         // when
         carCreateService.createCar(carDTO);
         // then
@@ -132,9 +132,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenCarStatusFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLACK", 0L, "   ", 100d, DepartmentDTO.builder().id(1L).build());
+                "BLACK", 0L, "   ", 100d, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -145,9 +145,9 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenCostPerDayFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLK", 0L, "AVAILABLE", null, DepartmentDTO.builder().id(1L).build());
+                "BLK", 0L, "AVAILABLE", null, DepartmentDto.builder().id(1L).build());
         // when
         Throwable result = catchThrowable(() -> carCreateService.createCar(carDTO));
         // then
@@ -158,7 +158,7 @@ class CarCreateServiceTest {
     @Test
     void createCar_whenDepartmentFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
         // given
-        CarDTO carDTO = new CarDTO(
+        CarDto carDTO = new CarDto(
                 null, "Mmm", "Bbb", "COUPE", 1999,
                 "BLK", 0L, "AVAILABLE", 100d, null);
         // when

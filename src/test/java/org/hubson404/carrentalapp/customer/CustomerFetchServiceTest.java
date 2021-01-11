@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.customer;
 
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ class CustomerFetchServiceTest {
     void findAll_callsRepository() {
         // given
         when(customerRepository.findAll()).thenReturn(List.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         // when
         customerFetchService.findAll();
         // then
@@ -42,7 +42,7 @@ class CustomerFetchServiceTest {
     void findCustomerById_callsCarRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         // when
         customerFetchService.findCustomerById(anyLong());
         // then

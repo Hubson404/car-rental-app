@@ -17,7 +17,7 @@ public @interface EnumValue {
 
     Class<? extends Enum<?>> enumClass();
 
-    String message() default "Value must be in uppercase";
+    String message() default "Enum value '${validatedValue}' is invalid.";
 
     Class<?>[] groups() default {};
 

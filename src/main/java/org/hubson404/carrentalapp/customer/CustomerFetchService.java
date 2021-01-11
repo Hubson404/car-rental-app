@@ -3,7 +3,7 @@ package org.hubson404.carrentalapp.customer;
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +18,15 @@ public class CustomerFetchService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
-    public List<CustomerDTO> findAll() {
+    public List<CustomerDto> findAll() {
         List<Customer> allCustomers = customerRepository.findAll();
-        return allCustomers.stream().map(customerMapper::toCustomerDTO).collect(Collectors.toList());
+        return allCustomers.stream().map(customerMapper::toCustomerDto).collect(Collectors.toList());
     }
 
-    public CustomerDTO findCustomerById(Long id) {
+    public CustomerDto findCustomerById(Long id) {
         Optional<Customer> byId = customerRepository.findById(id);
         Customer foundCustomer = byId.orElseThrow(
-                () -> new CustomerNotFoundException("Could not find department with id: " + id));
-        return customerMapper.toCustomerDTO(foundCustomer);
+                () -> new CustomerNotFoundException(id));
+        return customerMapper.toCustomerDto(foundCustomer);
     }
 }

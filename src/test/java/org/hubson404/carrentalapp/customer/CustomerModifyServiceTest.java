@@ -2,7 +2,7 @@ package org.hubson404.carrentalapp.customer;
 
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
-import org.hubson404.carrentalapp.model.CustomerDTO;
+import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class CustomerModifyServiceTest {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
         // when
-        Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, new CustomerDTO()));
+        Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, new CustomerDto()));
         // then
         assertThat(result).isExactlyInstanceOf(CustomerNotFoundException.class);
         verify(customerRepository, times(1)).findById(anyLong());
@@ -44,9 +44,9 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerFirstName_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
-        CustomerDTO customerDTO = CustomerDTO.builder().firstName("testName").build();
+        CustomerDto customerDTO = CustomerDto.builder().firstName("testName").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
         // then
@@ -58,7 +58,7 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerFirstNameToBlank_DoesNotCallRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        CustomerDTO customerDTO = CustomerDTO.builder().firstName("  ").build();
+        CustomerDto customerDTO = CustomerDto.builder().firstName("  ").build();
         // when
         Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, customerDTO));
         // then
@@ -71,9 +71,9 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerLastName_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
-        CustomerDTO customerDTO = CustomerDTO.builder().lastName("testLastName").build();
+        CustomerDto customerDTO = CustomerDto.builder().lastName("testLastName").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
         // then
@@ -85,7 +85,7 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerLastNameToBlank_DoesNotCallRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        CustomerDTO customerDTO = CustomerDTO.builder().lastName("  ").build();
+        CustomerDto customerDTO = CustomerDto.builder().lastName("  ").build();
         // when
         Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, customerDTO));
         // then
@@ -98,9 +98,9 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerEmail_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
-        CustomerDTO customerDTO = CustomerDTO.builder().email("testEmail").build();
+        CustomerDto customerDTO = CustomerDto.builder().email("testEmail").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
         // then
@@ -113,7 +113,7 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerEmailToBlank_DoesNotCallRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        CustomerDTO customerDTO = CustomerDTO.builder().email("  ").build();
+        CustomerDto customerDTO = CustomerDto.builder().email("  ").build();
         // when
         Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, customerDTO));
         // then
@@ -126,9 +126,9 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerAddress_CallsRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        when(customerMapper.toCustomerDTO(any(Customer.class))).thenReturn(new CustomerDTO());
+        when(customerMapper.toCustomerDto(any(Customer.class))).thenReturn(new CustomerDto());
         when(customerRepository.save(any(Customer.class))).thenReturn(new Customer());
-        CustomerDTO customerDTO = CustomerDTO.builder().address("testAddress").build();
+        CustomerDto customerDTO = CustomerDto.builder().address("testAddress").build();
         // when
         customerModifyService.modifyCustomer(1L, customerDTO);
         // then
@@ -141,7 +141,7 @@ class CustomerModifyServiceTest {
     void modifyCustomer_changeCustomerAddressToBlank_DoesNotCallRepository() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
-        CustomerDTO customerDTO = CustomerDTO.builder().address("  ").build();
+        CustomerDto customerDTO = CustomerDto.builder().address("  ").build();
         // when
         Throwable result = catchThrowable(() -> customerModifyService.modifyCustomer(1L, customerDTO));
         // then

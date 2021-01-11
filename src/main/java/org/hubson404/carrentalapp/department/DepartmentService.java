@@ -3,8 +3,7 @@ package org.hubson404.carrentalapp.department;
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
-import org.hubson404.carrentalapp.model.DepartmentDTO;
+import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,29 +19,26 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
 
-    public List<DepartmentDTO> findAll() {
+    public List<DepartmentDto> findAll() {
         List<Department> allDepartments = departmentRepository.findAll();
         return allDepartments.stream()
-                .map(departmentMapper::toDepartmentDTO)
+                .map(departmentMapper::toDepartmentDto)
                 .collect(Collectors.toList());
     }
 
-    public DepartmentDTO createDepartment(DepartmentDTO departmentDTO) {
-        if (departmentDTO.getAddress() == null || departmentDTO.getAddress().isBlank()) {
-            throw new InsufficientDataException("Department address must be specified.");
-        }
+    public DepartmentDto createDepartment(DepartmentDto departmentDTO) {
         Department createdDepartment = departmentRepository.save(departmentMapper.toDepartment(departmentDTO));
-        return departmentMapper.toDepartmentDTO(createdDepartment);
+        return departmentMapper.toDepartmentDto(createdDepartment);
     }
 
-    public DepartmentDTO findDepartmentById(Long id) {
+    public DepartmentDto findDepartmentById(Long id) {
         Department foundDepartment = departmentRepository.findById(id)
-                .orElseThrow(() -> new DepartmentNotFoundException("Could not find department with id: " + id));
-        return departmentMapper.toDepartmentDTO(foundDepartment);
+                .orElseThrow(() -> new DepartmentNotFoundException(id));
+        return departmentMapper.toDepartmentDto(foundDepartment);
     }
 
-    public DepartmentDTO deleteDepartment(Long id) {
-        DepartmentDTO departmentById = findDepartmentById(id);
+    public DepartmentDto deleteDepartment(Long id) {
+        DepartmentDto departmentById = findDepartmentById(id);
         departmentRepository.deleteById(id);
         return departmentById;
     }

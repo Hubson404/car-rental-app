@@ -7,7 +7,7 @@ import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.enums.CarBodyColor;
 import org.hubson404.carrentalapp.domain.enums.CarBodyType;
 import org.hubson404.carrentalapp.domain.enums.CarStatus;
-import org.hubson404.carrentalapp.model.CarDTO;
+import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +92,7 @@ class CarIntegrationTest {
 
         Department department = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
-        CarDTO carDTO = CarDTO.builder()
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder()
                 .model("testModel")
                 .brand("testBrand")
                 .productionYear(1999)
@@ -101,7 +101,7 @@ class CarIntegrationTest {
                 .carStatus("AVAILABLE")
                 .costPerDay(1000d)
                 .mileage(0L)
-                .department(departmentMapper.toDepartmentDTO(department))
+                .department(departmentMapper.toDepartmentDto(department))
                 .build();
 
         String requestBody = objectMapper.writeValueAsString(carDTO);
@@ -127,7 +127,7 @@ class CarIntegrationTest {
                 CarBodyColor.WHITE, 0L, CarStatus.AVAILABLE, 100d, warsaw));
         Long savedCarId = savedCar.getId();
 
-        CarDTO carDTO = CarDTO.builder().model("modifiedModel").build();
+        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().model("modifiedModel").build();
         // when
         String requestBody = objectMapper.writeValueAsString(carDTO);
 

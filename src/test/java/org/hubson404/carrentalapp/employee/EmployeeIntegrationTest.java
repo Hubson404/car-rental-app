@@ -5,7 +5,7 @@ import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
-import org.hubson404.carrentalapp.model.EmployeeDTO;
+import org.hubson404.carrentalapp.model.EmployeeDto;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,10 +73,10 @@ class EmployeeIntegrationTest {
 
         Department department = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+        EmployeeDto employeeDTO = EmployeeDto.builder()
                 .firstName("some firstname")
                 .lastName("some lastname")
-                .department(departmentMapper.toDepartmentDTO(department))
+                .department(departmentMapper.toDepartmentDto(department))
                 .build();
 
         String requestBody = objectMapper.writeValueAsString(employeeDTO);
@@ -102,10 +102,10 @@ class EmployeeIntegrationTest {
 
         Department department = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+        EmployeeDto employeeDTO = EmployeeDto.builder()
                 .firstName("  ")
                 .lastName("some lastname")
-                .department(departmentMapper.toDepartmentDTO(department))
+                .department(departmentMapper.toDepartmentDto(department))
                 .build();
 
         String requestBody = objectMapper.writeValueAsString(employeeDTO);
@@ -130,10 +130,10 @@ class EmployeeIntegrationTest {
 
         Department department = departmentRepository.save(new Department(
                 null, "Warsaw", null, null));
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+        EmployeeDto employeeDTO = EmployeeDto.builder()
                 .firstName("some firstName")
                 .lastName("  ")
-                .department(departmentMapper.toDepartmentDTO(department))
+                .department(departmentMapper.toDepartmentDto(department))
                 .build();
 
         String requestBody = objectMapper.writeValueAsString(employeeDTO);
@@ -156,7 +156,7 @@ class EmployeeIntegrationTest {
         // given
         int expectedNumberOfEntriesInRepository = 0;
 
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+        EmployeeDto employeeDTO = EmployeeDto.builder()
                 .firstName("some firstName")
                 .lastName("some lastName")
                 .build();

@@ -11,7 +11,7 @@ public class EnumValueImpl implements ConstraintValidator<EnumValue, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return valueList.contains(value);
+        return valueList.contains(value.toUpperCase());
     }
 
     @Override
