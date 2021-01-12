@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hubson404.carrentalapp.model.CarReservationDTO;
+import org.hubson404.carrentalapp.model.CarReservationDto;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarReservationCollection {
+public class CarReservationWrapper {
 
-    List<CarReservationDTO> carReservations;
+    List<CarReservationDto> carReservations;
 }

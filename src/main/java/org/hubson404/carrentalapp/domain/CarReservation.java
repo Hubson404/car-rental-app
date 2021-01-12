@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity(name = "car_reservations")
 @Data
@@ -21,7 +21,9 @@ public class CarReservation {
     private Long id;
 
     @CreationTimestamp
-    private Instant reservationCreateDate;
+//    @CreatedDate
+//    @Column(updatable = false)
+    private LocalDateTime reservationCreateDate;
 
     @ManyToOne
     private Customer customer;
@@ -29,8 +31,8 @@ public class CarReservation {
     @ManyToOne
     private Car car;
 
-    private Instant rentalStartingDate;
-    private Instant returnDate;
+    private LocalDateTime rentalStartingDate;
+    private LocalDateTime returnDate;
 
     @OneToOne
     private Department carRentalDepartment; //stream check latest car reservations for carReturnDepartment
