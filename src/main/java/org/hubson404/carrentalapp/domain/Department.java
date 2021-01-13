@@ -19,16 +19,18 @@ public class Department {
     @Column(unique = true)
     private String address;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "department",
             fetch = FetchType.EAGER,
-            cascade = CascadeType.MERGE)
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Employee> employees;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "department",
             fetch = FetchType.EAGER,
-            cascade = CascadeType.MERGE)
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Car> cars;
 
 }

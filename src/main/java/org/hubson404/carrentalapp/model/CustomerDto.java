@@ -26,7 +26,7 @@ public class CustomerDto {
     private String lastName;
 
     @NotNull(message = "Value is mandatory")
-    @Email
+    @Email(message = "Value must be formatted properly")
     private String email;
 
     @NotNull(message = "Value is mandatory")

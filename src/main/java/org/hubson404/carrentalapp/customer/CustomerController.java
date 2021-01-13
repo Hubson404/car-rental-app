@@ -1,6 +1,7 @@
 package org.hubson404.carrentalapp.customer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hubson404.carrentalapp.model.CustomerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CustomerController {
@@ -45,6 +47,5 @@ public class CustomerController {
     public void deleteCustomerById(@PathVariable Long id) {
         customerModifyService.deleteCustomerById(id);
     }
-
 
 }

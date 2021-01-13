@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity(name = "car_reservations")
 @Data
@@ -20,19 +19,19 @@ public class CarReservation {
     @GeneratedValue
     private Long id;
 
-    @CreationTimestamp
-    private Instant reservationCreateDate;
-
     @ManyToOne
     private Customer customer;
 
     @ManyToOne
     private Car car;
-    private Instant rentalStartingDate;
-    private Instant returnDate;
+
+    private LocalDateTime rentalStartingDate;
+    private LocalDateTime returnDate;
 
     @OneToOne
     private Department carRentalDepartment; //stream check latest car reservations for carReturnDepartment
+
+    private boolean canceled;
 
     @OneToOne
     private Department carReturnDepartment;
