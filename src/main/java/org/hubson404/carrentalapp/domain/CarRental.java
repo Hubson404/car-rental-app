@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity(name = "car_rentals")
 @Data
@@ -24,10 +24,10 @@ public class CarRental {
 
     @OneToOne
     private Employee employee;
-    private Instant rentalDate;
-
     @OneToOne
     private CarReservation reservation;
-    private String comments;
+
+    private LocalDateTime rentalDate;
+    private String comment;
 
 }
