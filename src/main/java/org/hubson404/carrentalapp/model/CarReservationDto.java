@@ -15,8 +15,6 @@ public class CarReservationDto {
 
     private Long id;
 
-    private String reservationCreateDate;
-
     @NotNull(message = "Provide customer 'id'")
     private Long customer;
 

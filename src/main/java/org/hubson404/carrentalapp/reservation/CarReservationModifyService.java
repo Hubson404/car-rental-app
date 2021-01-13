@@ -1,4 +1,4 @@
-package org.hubson404.carrentalapp.CarReservation;
+package org.hubson404.carrentalapp.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.CarReservation;

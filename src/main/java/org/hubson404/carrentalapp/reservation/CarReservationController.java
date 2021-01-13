@@ -1,4 +1,4 @@
-package org.hubson404.carrentalapp.CarReservation;
+package org.hubson404.carrentalapp.reservation;
 
 
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,6 @@ public class CarReservationController {
     public void deleteReservationById(@PathVariable Long id) {
         carReservationModifyService.deleteReservationById(id);
     }
-
 
     @EventListener(ApplicationReadyEvent.class)
     public void run() {

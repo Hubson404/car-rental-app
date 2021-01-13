@@ -62,7 +62,6 @@ public class CarReservationMapper {
 
         return CarReservationDto.builder()
                 .id(carReservation.getId())
-                .reservationCreateDate(carReservation.getReservationCreateDate().toString())
                 .car(carReservation.getCar().getId())
                 .customer(carReservation.getCustomer().getId())
                 .carRentalDepartment(carReservation.getCarRentalDepartment().getId())

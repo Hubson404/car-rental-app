@@ -3,8 +3,6 @@ package org.hubson404.carrentalapp.customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hubson404.carrentalapp.model.CustomerDto;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,14 +46,6 @@ public class CustomerController {
     @DeleteMapping("/customers/{id}")
     public void deleteCustomerById(@PathVariable Long id) {
         customerModifyService.deleteCustomerById(id);
-    }
-
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void initializeWithCustomer() {
-        CustomerDto customer = createCustomer(new CustomerDto(null, "Jan",
-                "Kowalski", "Address", "email@email"));
-        log.info(customer.toString());
     }
 
 }
