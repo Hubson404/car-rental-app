@@ -9,16 +9,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarRentalDto {
+public class CarReturnDto {
 
     private Long id;
 
     private EmployeeDto employee;
 
-    private String rentalDate;
+    private String returnDate;
 
     private CarReservationDto reservation;
 
-    private String comment;
+    private Long extraCharge;
 
+    private String comments;
 }
