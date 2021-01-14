@@ -5,10 +5,10 @@ import org.hubson404.carrentalapp.model.CarRentalDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = {CarReservationMapper.class, EmployeeMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(uses = {CarReservationMapper.class, EmployeeMapper.class, DepartmentMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CarRentalMapper {
 
-    CarRental toCarReservation(CarRentalDto carReservationDto);
+    CarRental toCarRental(CarRentalDto carReservationDto);
 
-    CarRentalDto toCarReservationDto(CarRental carReservation);
+    CarRentalDto toCarRentalDto(CarRental carReservation);
 }

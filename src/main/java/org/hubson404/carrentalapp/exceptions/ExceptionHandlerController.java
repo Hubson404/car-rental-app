@@ -25,16 +25,20 @@ public class ExceptionHandlerController {
                 .filter(fieldError -> fieldError.getDefaultMessage() != null)
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
-
         return new ErrorInformation(errorDetails);
     }
-
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorInformation handleIllegalArgumentException(IllegalArgumentException exception) {
         Map<String, List<String>> errorDetails = Map.of("error", List.of(exception.getMessage()));
+        return new ErrorInformation(errorDetails);
+    }
 
+    @ExceptionHandler(CarReservationNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorInformation handleCarReservationNotFoundException(CarReservationNotFoundException exception) {
+        Map<String, List<String>> errorDetails = Map.of("error", List.of(exception.getMessage()));
         return new ErrorInformation(errorDetails);
     }
 
@@ -55,8 +59,9 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(CarNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void CarNotFoundExceptionHandler(CarNotFoundException exception) {
-        log.error(exception.getMessage());
+    public ErrorInformation handleCarNotFoundException(CarNotFoundException exception) {
+        Map<String, List<String>> errorDetails = Map.of("error", List.of(exception.getMessage()));
+        return new ErrorInformation(errorDetails);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)

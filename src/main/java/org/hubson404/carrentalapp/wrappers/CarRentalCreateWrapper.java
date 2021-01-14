@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +20,7 @@ public class CarRentalCreateWrapper {
     @NotNull
     private Long employeeId;
 
+    @Length(min = 3)
     private String comments;
 
     public String getComments() {

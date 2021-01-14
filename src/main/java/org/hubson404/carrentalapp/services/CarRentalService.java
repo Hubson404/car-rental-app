@@ -5,6 +5,7 @@ import org.hubson404.carrentalapp.domain.CarRental;
 import org.hubson404.carrentalapp.domain.CarReservation;
 import org.hubson404.carrentalapp.domain.Employee;
 import org.hubson404.carrentalapp.employee.EmployeeRepository;
+import org.hubson404.carrentalapp.exceptions.CarRentalNotFoundException;
 import org.hubson404.carrentalapp.exceptions.CarReservationNotFoundException;
 import org.hubson404.carrentalapp.exceptions.EmployeeNotFoundException;
 import org.hubson404.carrentalapp.model.CarRentalDto;
@@ -45,15 +46,20 @@ public class CarRentalService {
 
         CarRental savedCarRental = carRentalRepository.save(carRental);
 
-        return carRentalMapper.toCarReservationDto(savedCarRental);
+        return carRentalMapper.toCarRentalDto(savedCarRental);
     }
 
     public CarRentalWrapper findAll() {
         List<CarRental> all = carRentalRepository.findAll();
-        List<CarRentalDto> collect = all.stream().map(carRentalMapper::toCarReservationDto).collect(Collectors.toList());
+        List<CarRentalDto> collect = all.stream().map(carRentalMapper::toCarRentalDto).collect(Collectors.toList());
         CarRentalWrapper carRentalWrapper = new CarRentalWrapper();
         carRentalWrapper.setCarRentals(collect);
         return carRentalWrapper;
 
+    }
+
+    public CarRentalDto findById(Long id) {
+        CarRental carRental = carRentalRepository.findById(id).orElseThrow(() -> new CarRentalNotFoundException(id));
+        return carRentalMapper.toCarRentalDto(carRental);
     }
 }

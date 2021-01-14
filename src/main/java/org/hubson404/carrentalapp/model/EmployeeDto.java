@@ -20,7 +20,7 @@ public class EmployeeDto {
     private Long id;
 
     @NotNull(message = "Value is mandatory")
-    @Length(max = 2, message = "Input must be 2 characters or longer")
+    @Length(min = 2, message = "Input must be 2 characters or longer")
     private String firstName;
 
     @NotNull(message = "Value is mandatory")

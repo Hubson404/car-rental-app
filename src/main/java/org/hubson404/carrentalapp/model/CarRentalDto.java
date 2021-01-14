@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hubson404.carrentalapp.domain.Employee;
 
-import javax.persistence.OneToOne;
 
 @Data
 @Builder
@@ -16,11 +14,10 @@ public class CarRentalDto {
 
     private Long id;
 
-    private Employee employee;
+    private EmployeeDto employee;
 
     private String rentalDate;
 
-    @OneToOne
     private CarReservationDto reservation;
 
     private String comment;
