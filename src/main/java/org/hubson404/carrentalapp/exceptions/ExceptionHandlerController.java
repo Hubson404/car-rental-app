@@ -42,6 +42,13 @@ public class ExceptionHandlerController {
         return new ErrorInformation(errorDetails);
     }
 
+    @ExceptionHandler(CarReturnNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorInformation handleCarReturnNotFoundException(CarReturnNotFoundException exception) {
+        Map<String, List<String>> errorDetails = Map.of("error", List.of(exception.getMessage()));
+        return new ErrorInformation(errorDetails);
+    }
+
     @ExceptionHandler(DepartmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorInformation DepartmentNotFoundExceptionHandler(DepartmentNotFoundException exception) {
