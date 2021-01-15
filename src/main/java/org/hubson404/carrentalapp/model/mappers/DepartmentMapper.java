@@ -6,7 +6,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {CarMapper.class, EmployeeMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(uses = {CarMapper.class, EmployeeMapper.class, CarRentalCompanyMapper.class},
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface DepartmentMapper {
 
     @Mapping(target = "employees", ignore = true)
@@ -14,4 +15,5 @@ public interface DepartmentMapper {
     Department toDepartment(DepartmentDto departmentDto);
 
     DepartmentDto toDepartmentDto(Department department);
+
 }

@@ -14,10 +14,18 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DepartmentDto {
 
+    @NotNull
+    private CarRentalCompanyDto carRentalCompany;
+
     private Long id;
 
     @NotNull(message = "Value is mandatory")
     @Length(min = 2, message = "Input must be 2 characters or longer")
     private String address;
+
+    public DepartmentDto(Long id, @NotNull(message = "Value is mandatory") @Length(min = 2, message = "Input must be 2 characters or longer") String address) {
+        this.id = id;
+        this.address = address;
+    }
 
 }

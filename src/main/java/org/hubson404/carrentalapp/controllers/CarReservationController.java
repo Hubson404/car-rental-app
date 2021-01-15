@@ -2,13 +2,9 @@ package org.hubson404.carrentalapp.controllers;
 
 
 import lombok.RequiredArgsConstructor;
-import org.hubson404.carrentalapp.domain.CarReservation;
 import org.hubson404.carrentalapp.model.CarReservationDto;
-import org.hubson404.carrentalapp.repositories.CarReservationRepository;
 import org.hubson404.carrentalapp.services.CarReservationService;
 import org.hubson404.carrentalapp.wrappers.CarReservationWrapper;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,7 +15,6 @@ import java.util.List;
 public class CarReservationController {
 
     private final CarReservationService carReservationService;
-    private final CarReservationRepository carReservationRepository;
 
     @PostMapping("/reservations")
     public CarReservationDto createReservation(@Valid @RequestBody CarReservationDto carReservationDTO) {
@@ -57,8 +52,4 @@ public class CarReservationController {
         carReservationService.deleteReservationById(id);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void run() {
-        carReservationRepository.save(new CarReservation());
-    }
 }
