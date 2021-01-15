@@ -12,6 +12,10 @@ import java.util.Set;
 @Builder
 public class Department {
 
+    @ManyToOne
+    @JoinColumn(name = "carRentalCompany_id")
+    private CarRentalCompany carRentalCompany;
+
     @Id
     @GeneratedValue
     private Long id;
@@ -32,5 +36,12 @@ public class Department {
             fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Car> cars;
+
+    public Department(Long id, String address, Set<Employee> employees, Set<Car> cars) {
+        this.id = id;
+        this.address = address;
+        this.employees = employees;
+        this.cars = cars;
+    }
 
 }
