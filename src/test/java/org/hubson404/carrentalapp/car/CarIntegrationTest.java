@@ -1,7 +1,6 @@
 package org.hubson404.carrentalapp.car;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.domain.enums.CarBodyColor;
@@ -10,6 +9,8 @@ import org.hubson404.carrentalapp.domain.enums.CarStatus;
 import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
+import org.hubson404.carrentalapp.repositories.CarRepository;
+import org.hubson404.carrentalapp.repositories.DepartmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
