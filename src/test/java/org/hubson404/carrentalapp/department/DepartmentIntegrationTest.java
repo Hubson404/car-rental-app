@@ -3,6 +3,7 @@ package org.hubson404.carrentalapp.department;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.model.DepartmentDto;
+import org.hubson404.carrentalapp.repositories.DepartmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

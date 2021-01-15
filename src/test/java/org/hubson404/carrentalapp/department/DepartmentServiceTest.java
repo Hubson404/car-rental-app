@@ -5,6 +5,8 @@ import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.DepartmentMapper;
+import org.hubson404.carrentalapp.repositories.DepartmentRepository;
+import org.hubson404.carrentalapp.services.DepartmentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

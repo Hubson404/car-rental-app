@@ -1,9 +1,6 @@
 package org.hubson404.carrentalapp.model.mappers;
 
 import lombok.RequiredArgsConstructor;
-import org.hubson404.carrentalapp.car.CarRepository;
-import org.hubson404.carrentalapp.customer.CustomerRepository;
-import org.hubson404.carrentalapp.department.DepartmentRepository;
 import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.CarReservation;
 import org.hubson404.carrentalapp.domain.Customer;
@@ -12,6 +9,9 @@ import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
 import org.hubson404.carrentalapp.model.CarReservationDto;
+import org.hubson404.carrentalapp.repositories.CarRepository;
+import org.hubson404.carrentalapp.repositories.CustomerRepository;
+import org.hubson404.carrentalapp.repositories.DepartmentRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
