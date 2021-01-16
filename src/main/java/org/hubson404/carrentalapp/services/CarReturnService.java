@@ -57,9 +57,17 @@ public class CarReturnService {
 
     public CarReturnWrapper findAll() {
         List<CarReturn> all = carReturnRepository.findAll();
-        List<CarReturnDto> collect = all.stream().map(carReturnMapper::toCarReturnDto).collect(Collectors.toList());
+        List<CarReturnDto> collect = all.stream()
+            .map(carReturnMapper::toCarReturnDto)
+            .collect(Collectors.toList());
         CarReturnWrapper carReturnWrapper = new CarReturnWrapper();
         carReturnWrapper.setCarReturns(collect);
         return carReturnWrapper;
+    }
+
+    private List<CarReturnDto> toDtos(final List<CarReturn> carReturns) {
+        return carReturns.stream()
+            .map(carReturnMapper::toCarReturnDto)
+            .collect(Collectors.toList());
     }
 }

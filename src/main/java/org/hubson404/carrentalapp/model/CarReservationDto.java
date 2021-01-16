@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -18,8 +19,8 @@ public class CarReservationDto {
     @NotNull(message = "Provide customer 'id'")
     private Long customer;
 
-    @NotNull(message = "Provide rented car 'id'")
-    private Long car;
+//    @NotNull(message = "Provide rented car 'id'")
+//    private Long car;
 
     @NotNull(message = "Value is mandatory")
     private String rentalStartingDate;
@@ -36,4 +37,8 @@ public class CarReservationDto {
     private Double totalCost;
 
     private boolean canceled;
+
+    @NotNull(message = "car is mandatory or whatever")
+    @Valid
+    private CarDto carDto;
 }

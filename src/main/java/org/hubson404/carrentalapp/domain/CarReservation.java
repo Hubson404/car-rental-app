@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity(name = "car_reservations")
 @Data
 @NoArgsConstructor
@@ -24,6 +27,12 @@ public class CarReservation {
 
     @ManyToOne
     private Car car;
+
+    @CreationTimestamp
+    private LocalDateTime createDate;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     private LocalDateTime rentalStartingDate;
     private LocalDateTime returnDate;

@@ -35,7 +35,7 @@ public class CarDto {
     @EnumValue(
             enumClass = CarBodyType.class
     )
-    private String carBodyType;
+    private CarBodyType carBodyType;
 
     @NotNull(message = "Value is mandatory")
     @Min(value = 1950, message = "Production year must be later than 1950")

@@ -5,9 +5,13 @@ import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.services.CarService;
 import org.hubson404.carrentalapp.wrappers.CarWrapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -30,9 +34,10 @@ public class CarController {
     }
 
     @PostMapping("/cars")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CarDto addCar(@Valid @RequestBody CarDto carDTO) {
-        return carService.createCar(carDTO);
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> addCar(@Valid @RequestBody CarDto carDTO) throws URISyntaxException {
+        final CarDto createdCar = carService.createCar(carDTO);
+        return ResponseEntity.created(new URI("/cars/" + carDTO.getId())).build();
     }
 
     @PatchMapping("/cars/{id}")

@@ -16,7 +16,9 @@ public abstract class GenericStringValidator<A extends Annotation> implements Co
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) return true;
+        if (value == null) {
+            return true;
+        }
         return condition().apply(value);
     }
 

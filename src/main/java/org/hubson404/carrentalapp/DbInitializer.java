@@ -1,5 +1,7 @@
 package org.hubson404.carrentalapp;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.*;
 import org.hubson404.carrentalapp.domain.enums.CarBodyColor;
@@ -8,11 +10,15 @@ import org.hubson404.carrentalapp.domain.enums.CarStatus;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.repositories.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Component
 @RequiredArgsConstructor
+@Profile("dev")
 public class DbInitializer {
 
     private final CarRentalCompanyRepository carRentalCompanyRepository;
@@ -26,8 +32,9 @@ public class DbInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void initialize() {
 
-        if (isEmpty) {
-
+        final List<CarRentalCompany> all = carRentalCompanyRepository.findAll();
+        if (all.isEmpty()) {
+            initializeDbData();
             CarRentalCompany savedCompany = getCarRentalCompany();
 
             Department department = getDepartment(savedCompany, "Gdansk");

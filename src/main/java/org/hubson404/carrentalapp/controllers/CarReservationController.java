@@ -2,6 +2,8 @@ package org.hubson404.carrentalapp.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+
+import org.hubson404.carrentalapp.domain.CarReservation;
 import org.hubson404.carrentalapp.model.CarReservationDto;
 import org.hubson404.carrentalapp.services.CarReservationService;
 import org.hubson404.carrentalapp.wrappers.CarReservationWrapper;
@@ -15,6 +17,14 @@ import java.util.List;
 public class CarReservationController {
 
     private final CarReservationService carReservationService;
+
+    @PostMapping("/reservations/search")
+    public CarReservationDto search(@Valid CarReservationSearchRequest request) {
+
+    }
+
+    @GetMapping
+    public CarReservationDto asd(@RequestParam, @RequestParam)
 
     @PostMapping("/reservations")
     public CarReservationDto createReservation(@Valid @RequestBody CarReservationDto carReservationDTO) {

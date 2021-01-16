@@ -32,21 +32,29 @@ public class CarRentalService {
 
 
     public CarRentalDto createCarRental(CarRentalCreateWrapper wrapper) {
+        Employee employee = findEmployeeById(wrapper.getEmployeeId());
+        CarReservation carReservation = findResercaationById(wrapper.getCarReservationId());
+        final CarRental carRental = createCarRental(employee, carReservation, wrapper.getComments());
+        CarRental savedCarRental = carRentalRepository.save(carRental);
+        return carRentalMapper.toCarRentalDto(savedCarRental);
+    }
 
-        Employee employee = employeeRepository.findById(wrapper.getEmployeeId())
-                .orElseThrow(() -> new EmployeeNotFoundException(wrapper.getEmployeeId()));
-        CarReservation carReservation = carReservationRepository.findById(wrapper.getCarReservationId())
-                .orElseThrow(() -> new CarReservationNotFoundException(wrapper.getCarReservationId()));
+    private Employee findEmployeeById(Long id) {
+        return employeeRepository.findById(id)
+            .orElseThrow(() -> new EmployeeNotFoundException(id));
+    }
 
+    private CarReservation findResercaationById(Long id) {
+        return carReservationRepository.findById(id)
+            .orElseThrow(() -> new CarReservationNotFoundException(id));
+    }
+
+    private CarRental createCarRental(final Employee employee, final CarReservation carReservation, String comments) {
         CarRental carRental = new CarRental();
         carRental.setEmployee(employee);
         carRental.setReservation(carReservation);
         carRental.setRentalDate(carReservation.getRentalStartingDate());
-        carRental.setComment(wrapper.getComments());
-
-        CarRental savedCarRental = carRentalRepository.save(carRental);
-
-        return carRentalMapper.toCarRentalDto(savedCarRental);
+        carRental.setComment(comments);
     }
 
     public CarRentalWrapper findAll() {
