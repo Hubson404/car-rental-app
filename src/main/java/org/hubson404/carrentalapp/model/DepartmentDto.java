@@ -1,5 +1,6 @@
 package org.hubson404.carrentalapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 public class DepartmentDto {
 
     @NotNull
+    @JsonIgnore
     private CarRentalCompanyDto carRentalCompany;
 
     private Long id;

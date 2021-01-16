@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity(name = "car_reservations")
 @Data
@@ -25,8 +25,8 @@ public class CarReservation {
     @ManyToOne
     private Car car;
 
-    private LocalDateTime rentalStartingDate;
-    private LocalDateTime returnDate;
+    private LocalDate rentalStartingDate;
+    private LocalDate returnDate;
 
     @OneToOne
     private Department carRentalDepartment; //stream check latest car reservations for carReturnDepartment

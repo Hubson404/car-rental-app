@@ -30,53 +30,38 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     public EmployeeDto createEmployee(EmployeeDto employeeDTO) {
-
-        checkPosition(employeeDTO);
-        Employee createdEmployee = getDepartmentFromRepository(employeeDTO);
-
-        Employee savedEmployee = employeeRepository.save(createdEmployee);
+        EmployeeDto checkedEmployee = checkPosition(employeeDTO);
+        Employee savedEmployee = saveEmployee(checkedEmployee);
         return employeeMapper.toEmployeeDto(savedEmployee);
     }
 
-    private void checkPosition(EmployeeDto employeeDTO) {
-        if (employeeDTO.getPosition() == null) {
-            log.info("Position was not specified, setting position to 'BASIC'");
-            employeeDTO.setPosition("BASIC");
-        }
-    }
-
-    private Employee getDepartmentFromRepository(EmployeeDto employeeDTO) {
-
-        Employee createdEmployee = employeeMapper.toEmployee(employeeDTO);
-        Optional<Department> byId = departmentRepository.findById(employeeDTO.getDepartment().getId());
-
-        byId.ifPresentOrElse(createdEmployee::setDepartment,
-                () -> {
-                    throw new DepartmentNotFoundException(employeeDTO.getDepartment().getId());
-                });
-        return createdEmployee;
-    }
-
     public List<EmployeeDto> findAll() {
-        List<Employee> all = employeeRepository.findAll();
-        return all.stream().map(employeeMapper::toEmployeeDto).collect(Collectors.toList());
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream()
+                .map(employeeMapper::toEmployeeDto)
+                .collect(Collectors.toList());
     }
 
-    public EmployeeDto findEmployeeById(Long id) {
-        Optional<Employee> byId = employeeRepository.findById(id);
+    public EmployeeDto findEmployeeById(Long employeeId) {
+        Optional<Employee> byId = employeeRepository.findById(employeeId);
         Employee employee = byId.orElseThrow(
-                () -> new EmployeeNotFoundException(id));
+                () -> new EmployeeNotFoundException(employeeId));
         return employeeMapper.toEmployeeDto(employee);
     }
 
     public List<EmployeeDto> findEmployeeByDepartmentId(Long departmentId) {
         List<Employee> employeeByDepartment_id = employeeRepository.findEmployeeByDepartment_Id(departmentId);
-        return employeeByDepartment_id.stream().map(employeeMapper::toEmployeeDto).collect(Collectors.toList());
+        return employeeByDepartment_id.stream()
+                .map(employeeMapper::toEmployeeDto)
+                .collect(Collectors.toList());
     }
 
     public List<EmployeeDto> findManagersInDepartmentById(Long departmentId) {
-        List<Employee> employeesByDepartmentIdAndPosition = employeeRepository.findEmployeesByDepartmentIdAndPosition(departmentId, EmployeePosition.MANAGER);
-        return employeesByDepartmentIdAndPosition.stream().map(employeeMapper::toEmployeeDto).collect(Collectors.toList());
+        List<Employee> employeesByDepartmentIdAndPosition
+                = employeeRepository.findEmployeesByDepartmentIdAndPosition(departmentId, EmployeePosition.MANAGER);
+        return employeesByDepartmentIdAndPosition.stream()
+                .map(employeeMapper::toEmployeeDto)
+                .collect(Collectors.toList());
     }
 
     public EmployeeDto promoteEmployee(Long id) {
@@ -101,5 +86,29 @@ public class EmployeeService {
                 () -> {
                     throw new EmployeeNotFoundException(id);
                 });
+    }
+
+    private EmployeeDto checkPosition(EmployeeDto employeeDTO) {
+        if (employeeDTO.getPosition() == null) {
+            log.info("Position was not specified, setting position to 'BASIC'");
+            employeeDTO.setPosition("BASIC");
+        }
+        return employeeDTO;
+    }
+
+    private Employee saveEmployee(EmployeeDto employeeDTO) {
+        Employee createdEmployee = employeeMapper.toEmployee(employeeDTO);
+        Employee employeeWithDepartment = getDepartmentFromRepositoryForEmployee(
+                employeeDTO.getDepartment().getId(), createdEmployee);
+        return employeeRepository.save(employeeWithDepartment);
+    }
+
+    private Employee getDepartmentFromRepositoryForEmployee(Long departmentId, Employee employee) {
+        Optional<Department> byId = departmentRepository.findById(departmentId);
+        byId.ifPresentOrElse(employee::setDepartment,
+                () -> {
+                    throw new DepartmentNotFoundException(departmentId);
+                });
+        return employee;
     }
 }

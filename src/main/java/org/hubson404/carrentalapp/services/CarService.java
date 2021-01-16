@@ -13,9 +13,12 @@ import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.hubson404.carrentalapp.repositories.CarRepository;
 import org.hubson404.carrentalapp.repositories.DepartmentRepository;
+import org.hubson404.carrentalapp.wrappers.CarWrapper;
+import org.hubson404.carrentalapp.wrappers.SearchParametersWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +30,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarService {
 
-    private final CarRepository carRepository;
     private final DepartmentRepository departmentRepository;
+    private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     public CarDto createCar(CarDto carDTO) {
@@ -38,32 +41,15 @@ public class CarService {
         return carMapper.toCarDto(savedCar);
     }
 
-    private void checkMileage(CarDto carDTO) {
-        if (carDTO.getMileage() == null) {
-            log.info("Mileage was not specified, setting mileage to '0km'");
-            carDTO.setMileage(0L);
-        }
-    }
-
-    private Car getDepartmentFromRepository(CarDto carDto) {
-        Car createdCar = carMapper.toCar(carDto);
-        Optional<Department> byId = departmentRepository.findById(carDto.getDepartment().getId());
-        byId.ifPresentOrElse(createdCar::setDepartment,
-                () -> {
-                    throw new DepartmentNotFoundException(carDto.getDepartment().getId());
-                });
-        return createdCar;
-    }
-
     public CarDto findCarById(Long id) {
         Optional<Car> carRepositoryById = carRepository.findById(id);
         Car car = carRepositoryById.orElseThrow(() -> new CarNotFoundException(id));
         return carMapper.toCarDto(car);
     }
 
-    public List<CarDto> findAllCars() {
-        List<Car> all = carRepository.findAll();
-        return all.stream().map(carMapper::toCarDto).collect(Collectors.toList());
+    public CarWrapper findAllCars() {
+        List<Car> cars = carRepository.findAll();
+        return toCarWrapper(cars);
     }
 
     public void deleteCarById(Long id) {
@@ -150,5 +136,50 @@ public class CarService {
         Car savedCar = carRepository.save(foundCar);
 
         return carMapper.toCarDto(savedCar);
+    }
+
+    public CarWrapper findFreeCarsInTimePeriod(SearchParametersWrapper parameters) {
+        List<Car> cars = carRepository.findAll();
+        List<Car> carsFreeInGivenPeriod = findFreeCarsInTimePeriod(parameters, cars);
+        return toCarWrapper(carsFreeInGivenPeriod);
+    }
+
+    private List<Car> findFreeCarsInTimePeriod(SearchParametersWrapper parameters, List<Car> cars) {
+        return cars.stream()
+                .filter(car -> car.getReservations().stream()
+                        .filter(carReservation -> carReservation.getReturnDate()
+                                .isAfter(LocalDate.parse(parameters.getRentStartDate())))
+                        .noneMatch(carReservation -> carReservation.getRentalStartingDate()
+                                .isBefore(LocalDate.parse(parameters.getRentEndDate())))
+                )
+                .collect(Collectors.toList());
+    }
+
+    private List<CarDto> mapToCarDtoList(List<Car> cars) {
+        return cars.stream().map(carMapper::toCarDto).collect(Collectors.toList());
+    }
+
+    private void checkMileage(CarDto carDTO) {
+        if (carDTO.getMileage() == null) {
+            log.info("Mileage was not specified, setting mileage to '0km'");
+            carDTO.setMileage(0L);
+        }
+    }
+
+    private Car getDepartmentFromRepository(CarDto carDto) {
+        Car createdCar = carMapper.toCar(carDto);
+        Optional<Department> byId = departmentRepository.findById(carDto.getDepartment().getId());
+        byId.ifPresentOrElse(createdCar::setDepartment,
+                () -> {
+                    throw new DepartmentNotFoundException(carDto.getDepartment().getId());
+                });
+        return createdCar;
+    }
+
+    private CarWrapper toCarWrapper(List<Car> cars) {
+        List<CarDto> collect = cars.stream().map(carMapper::toCarDto).collect(Collectors.toList());
+        CarWrapper carWrapper = new CarWrapper();
+        carWrapper.setCars(collect);
+        return carWrapper;
     }
 }
