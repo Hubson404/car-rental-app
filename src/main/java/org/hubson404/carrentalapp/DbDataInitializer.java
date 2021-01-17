@@ -8,12 +8,18 @@ import org.hubson404.carrentalapp.domain.enums.CarStatus;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
 import org.hubson404.carrentalapp.repositories.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
+@Transactional
+@Profile("dev")
 @RequiredArgsConstructor
-public class DbInitializer {
+public class DbDataInitializer {
 
     private final CarRentalCompanyRepository carRentalCompanyRepository;
     private final DepartmentRepository departmentRepository;
@@ -21,36 +27,38 @@ public class DbInitializer {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
 
-    private Boolean isEmpty = false;
-
     @EventListener(ApplicationReadyEvent.class)
-    public void initialize() {
-
-        if (isEmpty) {
-
-            CarRentalCompany savedCompany = getCarRentalCompany();
-
-            Department department = getDepartment(savedCompany, "Gdansk");
-
-            getEmployee(department, "John", "Carson", EmployeePosition.MANAGER);
-            getEmployee(department, "Tim", "Worker", EmployeePosition.BASIC);
-
-            getAudi(department, CarBodyColor.WHITE);
-            getAudi(department, CarBodyColor.BLUE);
-            getAudi(department, CarBodyColor.RED);
-
-            getCustomer("Tom", "Driver", "Warsaw");
-            getCustomer("Matt", "Walker", "Gdansk");
+    public void checkDbStatus() {
+        final List<CarRentalCompany> all = carRentalCompanyRepository.findAll();
+        if (all.isEmpty()) {
+            initializeDbData();
         }
     }
 
-    private Customer getCustomer(String name, String lastname, String address) {
-        Customer build = Customer.builder().firstName(name).lastName(lastname).address(address)
-                .email(name + "." + lastname + "@email.com").build();
-        return customerRepository.save(build);
+    private void initializeDbData() {
+
+        CarRentalCompany savedCompany = createCarRentalCompany();
+
+        Department department = createDepartment(savedCompany, "Gdansk");
+
+        createEmployee(department, "John", "Carson", EmployeePosition.MANAGER);
+        createEmployee(department, "Tim", "Worker", EmployeePosition.BASIC);
+
+        createAudiCar(department, CarBodyColor.WHITE);
+        createAudiCar(department, CarBodyColor.BLUE);
+        createAudiCar(department, CarBodyColor.RED);
+
+        createCustomer("Tom", "Driver", "Warsaw");
+        createCustomer("Matt", "Walker", "Gdansk");
     }
 
-    private Car getAudi(Department department, CarBodyColor color) {
+    private void createCustomer(String name, String lastname, String address) {
+        Customer build = Customer.builder().firstName(name).lastName(lastname).address(address)
+                .email(name + "." + lastname + "@email.com").build();
+        customerRepository.save(build);
+    }
+
+    private void createAudiCar(Department department, CarBodyColor color) {
         Car build = Car.builder().brand("Audi").model("A4").carBodyType(CarBodyType.STATION_WAGON)
                 .carStatus(CarStatus.AVAILABLE)
                 .color(color)
@@ -59,26 +67,26 @@ public class DbInitializer {
                 .mileage(125L)
                 .department(department)
                 .build();
-        return carRepository.save(build);
+        carRepository.save(build);
     }
 
-    private Employee getEmployee(Department department, String name, String lastName, EmployeePosition position) {
+    private void createEmployee(Department department, String name, String lastName, EmployeePosition position) {
         Employee employee = new Employee();
         employee.setFirstName(name);
         employee.setLastName(lastName);
         employee.setPosition(position);
         employee.setDepartment(department);
-        return employeeRepository.save(employee);
+        employeeRepository.save(employee);
     }
 
-    private Department getDepartment(CarRentalCompany savedCompany, String address) {
+    private Department createDepartment(CarRentalCompany savedCompany, String address) {
         Department department = new Department();
         department.setAddress(address);
         department.setCarRentalCompany(savedCompany);
         return departmentRepository.save(department);
     }
 
-    private CarRentalCompany getCarRentalCompany() {
+    private CarRentalCompany createCarRentalCompany() {
         CarRentalCompany company = new CarRentalCompany();
         company.setCompanyName("comp-details.name");
         company.setDomainAddress("comp-details.domain");
@@ -86,9 +94,5 @@ public class DbInitializer {
         company.setOwnersName("comp-details.owner");
         company.setCompanyLogo("comp-details.logo");
         return carRentalCompanyRepository.save(company);
-    }
-
-    public void setEmpty(Boolean empty) {
-        isEmpty = empty;
     }
 }
