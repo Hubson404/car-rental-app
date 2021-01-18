@@ -14,11 +14,9 @@ import org.hubson404.carrentalapp.model.mappers.CarMapper;
 import org.hubson404.carrentalapp.repositories.CarRepository;
 import org.hubson404.carrentalapp.repositories.DepartmentRepository;
 import org.hubson404.carrentalapp.wrappers.CarWrapper;
-import org.hubson404.carrentalapp.wrappers.SearchParametersWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +27,14 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class CarService {
-
     private final DepartmentRepository departmentRepository;
+
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     public CarDto createCar(CarDto carDTO) {
         checkMileage(carDTO);
-        Car createdCar = getDepartmentFromRepository(carDTO);
+        Car createdCar = createCarAndSetDepartmentFromRepository(carDTO);
         Car savedCar = carRepository.save(createdCar);
         return carMapper.toCarDto(savedCar);
     }
@@ -61,24 +59,104 @@ public class CarService {
     }
 
     public CarDto modifyCar(Long id, CarDto carDTO) {
-
         Car foundCar = carRepository.findById(id).orElseThrow(
                 () -> new CarNotFoundException(id));
+        checkForCarModifications(carDTO, foundCar);
+        Car savedCar = carRepository.save(foundCar);
+        return carMapper.toCarDto(savedCar);
+    }
 
-        if (carDTO.getBrand() != null) {
-            if (carDTO.getBrand().isBlank()) {
-                throw new IllegalArgumentException("Brand field cannot be set to empty.");
-            }
-            foundCar.setBrand(carDTO.getBrand());
+    private Car createCarAndSetDepartmentFromRepository(CarDto carDto) {
+        Car createdCar = carMapper.toCar(carDto);
+        supplementCarWithDepartmentFromRepository(carDto, createdCar);
+        return createdCar;
+    }
+
+    private void supplementCarWithDepartmentFromRepository(CarDto carDto, Car createdCar) {
+        Optional<Department> byId = departmentRepository.findById(carDto.getDepartment().getId());
+        byId.ifPresentOrElse(createdCar::setDepartment,
+                () -> {
+                    throw new DepartmentNotFoundException(carDto.getDepartment().getId());
+                });
+    }
+
+    private CarWrapper toCarWrapper(List<Car> cars) {
+        List<CarDto> collect = cars.stream().map(carMapper::toCarDto).collect(Collectors.toList());
+        CarWrapper carWrapper = new CarWrapper();
+        carWrapper.setCars(collect);
+        return carWrapper;
+    }
+
+    private void checkForCarModifications(CarDto carDTO, Car foundCar) {
+        modifyBrand(carDTO, foundCar);
+        modifyModel(carDTO, foundCar);
+        modifyProductionYear(carDTO, foundCar);
+        modifyMileage(carDTO, foundCar);
+        modifyCostPerDay(carDTO, foundCar);
+        modifyCarBodyType(carDTO, foundCar);
+        modifyCarColor(carDTO, foundCar);
+        modifyCarStatus(carDTO, foundCar);
+        modifyCarDepartment(carDTO, foundCar);
+    }
+
+    private void modifyCarDepartment(CarDto carDTO, Car foundCar) {
+        if (carDTO.getDepartment() != null && carDTO.getDepartment().getId() != null) {
+            Optional<Department> byId = departmentRepository.findById(carDTO.getDepartment().getId());
+            Department department = byId.orElseThrow(
+                    () -> new DepartmentNotFoundException(carDTO.getDepartment().getId()));
+            foundCar.setDepartment(department);
         }
+    }
 
-        if (carDTO.getModel() != null) {
-            if (carDTO.getModel().isBlank()) {
-                throw new IllegalArgumentException("Model field cannot be set to empty.");
+    private void modifyCarStatus(CarDto carDTO, Car foundCar) {
+        if (carDTO.getCarStatus() != null) {
+            List<CarStatus> enumValues = List.of(CarStatus.values());
+            if (!enumValues.contains(CarStatus.valueOf(carDTO.getCarStatus()))) {
+                throw new IllegalArgumentException("Wrong body type given");
             }
-            foundCar.setModel(carDTO.getModel());
+            foundCar.setCarStatus(CarStatus.valueOf((carDTO.getCarStatus())));
         }
+    }
 
+    private void modifyCarColor(CarDto carDTO, Car foundCar) {
+        if (carDTO.getColor() != null) {
+            List<CarBodyColor> enumValues = List.of(CarBodyColor.values());
+            if (!enumValues.contains(CarBodyColor.valueOf(carDTO.getColor()))) {
+                throw new IllegalArgumentException("Wrong body type given");
+            }
+            foundCar.setColor(CarBodyColor.valueOf((carDTO.getColor())));
+        }
+    }
+
+    private void modifyCarBodyType(CarDto carDTO, Car foundCar) {
+        if (carDTO.getCarBodyType() != null) {
+            List<CarBodyType> enumValues = List.of(CarBodyType.values());
+            if (!enumValues.contains(CarBodyType.valueOf(carDTO.getCarBodyType()))) {
+                throw new IllegalArgumentException("Wrong body type given");
+            }
+            foundCar.setCarBodyType(CarBodyType.valueOf(carDTO.getCarBodyType()));
+        }
+    }
+
+    private void modifyCostPerDay(CarDto carDTO, Car foundCar) {
+        if (carDTO.getCostPerDay() != null) {
+            if (carDTO.getCostPerDay() < 0) {
+                throw new IllegalArgumentException("Cost per day must be greater than zero.");
+            }
+            foundCar.setCostPerDay(carDTO.getCostPerDay());
+        }
+    }
+
+    private void modifyMileage(CarDto carDTO, Car foundCar) {
+        if (carDTO.getMileage() != null) {
+            if (carDTO.getMileage() < 0) {
+                throw new IllegalArgumentException("Mileage cannot be set to negative value.");
+            }
+            foundCar.setMileage(carDTO.getMileage());
+        }
+    }
+
+    private void modifyProductionYear(CarDto carDTO, Car foundCar) {
         if (carDTO.getProductionYear() != null) {
             if (carDTO.getProductionYear() <= 1950) {
                 throw new IllegalArgumentException("Production year cannot be earlier than 1950.");
@@ -87,76 +165,24 @@ public class CarService {
             }
             foundCar.setProductionYear(carDTO.getProductionYear());
         }
-
-        if (carDTO.getMileage() != null) {
-            if (carDTO.getMileage() < 0) {
-                throw new IllegalArgumentException("Mileage cannot be set to negative value.");
-            }
-            foundCar.setMileage(carDTO.getMileage());
-        }
-
-        if (carDTO.getCostPerDay() != null) {
-            if (carDTO.getCostPerDay() < 0) {
-                throw new IllegalArgumentException("Cost per day must be greater than zero.");
-            }
-            foundCar.setCostPerDay(carDTO.getCostPerDay());
-        }
-
-        if (carDTO.getCarBodyType() != null) {
-            List<CarBodyType> enumValues = List.of(CarBodyType.values());
-            if (!enumValues.contains(CarBodyType.valueOf(carDTO.getCarBodyType()))) {
-                throw new IllegalArgumentException("Wrong body type given");
-            }
-            foundCar.setCarBodyType(CarBodyType.valueOf(carDTO.getCarBodyType()));
-        }
-
-        if (carDTO.getColor() != null) {
-            List<CarBodyColor> enumValues = List.of(CarBodyColor.values());
-            if (!enumValues.contains(CarBodyColor.valueOf(carDTO.getColor()))) {
-                throw new IllegalArgumentException("Wrong body type given");
-            }
-            foundCar.setColor(CarBodyColor.valueOf((carDTO.getColor())));
-        }
-
-        if (carDTO.getCarStatus() != null) {
-            List<CarStatus> enumValues = List.of(CarStatus.values());
-            if (!enumValues.contains(CarStatus.valueOf(carDTO.getCarStatus()))) {
-                throw new IllegalArgumentException("Wrong body type given");
-            }
-            foundCar.setCarStatus(CarStatus.valueOf((carDTO.getCarStatus())));
-        }
-
-        if (carDTO.getDepartment() != null && carDTO.getDepartment().getId() != null) {
-            Optional<Department> byId = departmentRepository.findById(carDTO.getDepartment().getId());
-            Department department = byId.orElseThrow(
-                    () -> new DepartmentNotFoundException(carDTO.getDepartment().getId()));
-            foundCar.setDepartment(department);
-        }
-
-        Car savedCar = carRepository.save(foundCar);
-
-        return carMapper.toCarDto(savedCar);
     }
 
-    public CarWrapper findFreeCarsInTimePeriod(SearchParametersWrapper parameters) {
-        List<Car> cars = carRepository.findAll();
-        List<Car> carsFreeInGivenPeriod = findFreeCarsInTimePeriod(parameters, cars);
-        return toCarWrapper(carsFreeInGivenPeriod);
+    private void modifyModel(CarDto carDTO, Car foundCar) {
+        if (carDTO.getModel() != null) {
+            if (carDTO.getModel().isBlank()) {
+                throw new IllegalArgumentException("Model field cannot be set to empty.");
+            }
+            foundCar.setModel(carDTO.getModel());
+        }
     }
 
-    private List<Car> findFreeCarsInTimePeriod(SearchParametersWrapper parameters, List<Car> cars) {
-        return cars.stream()
-                .filter(car -> car.getReservations().stream()
-                        .filter(carReservation -> carReservation.getReturnDate()
-                                .isAfter(LocalDate.parse(parameters.getRentStartDate())))
-                        .noneMatch(carReservation -> carReservation.getRentalStartingDate()
-                                .isBefore(LocalDate.parse(parameters.getRentEndDate())))
-                )
-                .collect(Collectors.toList());
-    }
-
-    private List<CarDto> mapToCarDtoList(List<Car> cars) {
-        return cars.stream().map(carMapper::toCarDto).collect(Collectors.toList());
+    private void modifyBrand(CarDto carDTO, Car foundCar) {
+        if (carDTO.getBrand() != null) {
+            if (carDTO.getBrand().isBlank()) {
+                throw new IllegalArgumentException("Brand field cannot be set to empty.");
+            }
+            foundCar.setBrand(carDTO.getBrand());
+        }
     }
 
     private void checkMileage(CarDto carDTO) {
@@ -164,22 +190,5 @@ public class CarService {
             log.info("Mileage was not specified, setting mileage to '0km'");
             carDTO.setMileage(0L);
         }
-    }
-
-    private Car getDepartmentFromRepository(CarDto carDto) {
-        Car createdCar = carMapper.toCar(carDto);
-        Optional<Department> byId = departmentRepository.findById(carDto.getDepartment().getId());
-        byId.ifPresentOrElse(createdCar::setDepartment,
-                () -> {
-                    throw new DepartmentNotFoundException(carDto.getDepartment().getId());
-                });
-        return createdCar;
-    }
-
-    private CarWrapper toCarWrapper(List<Car> cars) {
-        List<CarDto> collect = cars.stream().map(carMapper::toCarDto).collect(Collectors.toList());
-        CarWrapper carWrapper = new CarWrapper();
-        carWrapper.setCars(collect);
-        return carWrapper;
     }
 }

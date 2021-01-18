@@ -34,6 +34,7 @@ public class CarReturnService {
     public CarReturnDto createCarReturn(CarReturnCreateWrapper wrapper) {
         Employee employee = getEmployeeFromRepository(wrapper);
         CarReservation carReservation = getCarReservationFromRepository(wrapper);
+        carReservation.getCar().setCarStatus(CarStatus.AVAILABLE);
         CarReturn savedCarReturn = saveCarReturn(wrapper, employee, carReservation);
         return carReturnMapper.toCarReturnDto(savedCarReturn);
     }

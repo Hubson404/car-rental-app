@@ -3,7 +3,6 @@ package org.hubson404.carrentalapp.services;
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.Customer;
 import org.hubson404.carrentalapp.exceptions.CustomerNotFoundException;
-import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.hubson404.carrentalapp.model.CustomerDto;
 import org.hubson404.carrentalapp.model.mappers.CustomerMapper;
 import org.hubson404.carrentalapp.repositories.CustomerRepository;
@@ -21,23 +20,8 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
 
     public CustomerDto createCustomer(CustomerDto customerDTO) {
-
-        if (customerDTO.getFirstName() == null || customerDTO.getFirstName().isBlank()) {
-            throw new InsufficientDataException("Customer first name must be specified.");
-        }
-        if (customerDTO.getLastName() == null || customerDTO.getLastName().isBlank()) {
-            throw new InsufficientDataException("Customer last name must be specified.");
-        }
-        if (customerDTO.getEmail() == null || customerDTO.getEmail().isBlank()) {
-            throw new InsufficientDataException("Customer email must be specified.");
-        }
-        if (customerDTO.getAddress() == null || customerDTO.getAddress().isBlank()) {
-            throw new InsufficientDataException("Customer address must be specified.");
-        }
-
         Customer createdCustomer = customerMapper.toCustomer(customerDTO);
         Customer savedCustomer = customerRepository.save(createdCustomer);
-
         return customerMapper.toCustomerDto(savedCustomer);
     }
 
@@ -62,37 +46,53 @@ public class CustomerService {
     }
 
     public CustomerDto modifyCustomer(Long id, CustomerDto customerDTO) {
-
         Customer foundCustomer = customerRepository.findById(id).orElseThrow(
                 () -> new CustomerNotFoundException(id));
+        checkCustomerForModifications(customerDTO, foundCustomer);
+        Customer savedCustomer = customerRepository.save(foundCustomer);
+        return customerMapper.toCustomerDto(savedCustomer);
+    }
 
-        if (customerDTO.getFirstName() != null) {
-            if (customerDTO.getFirstName().isBlank()) {
-                throw new IllegalArgumentException("First name field cannot be set to empty.");
-            }
-            foundCustomer.setFirstName(customerDTO.getFirstName());
-        }
-        if (customerDTO.getLastName() != null) {
-            if (customerDTO.getLastName().isBlank()) {
-                throw new IllegalArgumentException("Last name field cannot be set to empty.");
-            }
-            foundCustomer.setLastName(customerDTO.getLastName());
-        }
-        if (customerDTO.getEmail() != null) {
-            if (customerDTO.getEmail().isBlank()) {
-                throw new IllegalArgumentException("Email field cannot be set to empty.");
-            }
-            foundCustomer.setEmail(customerDTO.getEmail());
-        }
+    private void checkCustomerForModifications(CustomerDto customerDTO, Customer foundCustomer) {
+        modifyFirstName(customerDTO, foundCustomer);
+        modifyLastName(customerDTO, foundCustomer);
+        modifyEmail(customerDTO, foundCustomer);
+        modifyAddress(customerDTO, foundCustomer);
+    }
+
+    private void modifyAddress(CustomerDto customerDTO, Customer foundCustomer) {
         if (customerDTO.getAddress() != null) {
             if (customerDTO.getAddress().isBlank()) {
                 throw new IllegalArgumentException("Address field cannot be set to empty.");
             }
             foundCustomer.setAddress(customerDTO.getAddress());
         }
+    }
 
-        Customer savedCustomer = customerRepository.save(foundCustomer);
+    private void modifyEmail(CustomerDto customerDTO, Customer foundCustomer) {
+        if (customerDTO.getEmail() != null) {
+            if (customerDTO.getEmail().isBlank()) {
+                throw new IllegalArgumentException("Email field cannot be set to empty.");
+            }
+            foundCustomer.setEmail(customerDTO.getEmail());
+        }
+    }
 
-        return customerMapper.toCustomerDto(savedCustomer);
+    private void modifyLastName(CustomerDto customerDTO, Customer foundCustomer) {
+        if (customerDTO.getLastName() != null) {
+            if (customerDTO.getLastName().isBlank()) {
+                throw new IllegalArgumentException("Last name field cannot be set to empty.");
+            }
+            foundCustomer.setLastName(customerDTO.getLastName());
+        }
+    }
+
+    private void modifyFirstName(CustomerDto customerDTO, Customer foundCustomer) {
+        if (customerDTO.getFirstName() != null) {
+            if (customerDTO.getFirstName().isBlank()) {
+                throw new IllegalArgumentException("First name field cannot be set to empty.");
+            }
+            foundCustomer.setFirstName(customerDTO.getFirstName());
+        }
     }
 }

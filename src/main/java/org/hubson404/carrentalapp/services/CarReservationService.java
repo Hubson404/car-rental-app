@@ -24,7 +24,6 @@ public class CarReservationService {
     private final CarReservationRepository carReservationRepository;
     private final CarReservationMapper carReservationMapper;
 
-
     public CarReservationDto createReservation(CarReservationDto carReservationDTO) {
         CarReservation carReservation = carReservationMapper.toCarReservation(carReservationDTO);
         carReservation.setTotalCost(calculateTotalCost(carReservation));

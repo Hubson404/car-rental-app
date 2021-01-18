@@ -34,6 +34,7 @@ public class CarRentalService {
     public CarRentalDto createCarRental(CarRentalCreateWrapper wrapper) {
         Employee employee = getEmployeeFromRepository(wrapper.getEmployeeId());
         CarReservation carReservation = getCarReservationFromRepository(wrapper.getCarReservationId());
+        carReservation.getCar().setCarStatus(CarStatus.RENTED);
         CarRental savedCarRental = saveCarRental(wrapper, employee, carReservation);
         return carRentalMapper.toCarRentalDto(savedCarRental);
     }

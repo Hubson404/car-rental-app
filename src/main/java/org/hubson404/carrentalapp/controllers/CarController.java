@@ -2,6 +2,7 @@ package org.hubson404.carrentalapp.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.model.CarDto;
+import org.hubson404.carrentalapp.services.CarSearchService;
 import org.hubson404.carrentalapp.services.CarService;
 import org.hubson404.carrentalapp.wrappers.CarWrapper;
 import org.hubson404.carrentalapp.wrappers.SearchParametersWrapper;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 public class CarController {
 
     private final CarService carService;
+    private final CarSearchService carSearchService;
 
     @GetMapping("/cars")
     public CarWrapper findAllCars() {
@@ -28,7 +30,7 @@ public class CarController {
 
     @PostMapping("/cars/search")
     public CarWrapper findCarsAvailableInGivenTimePeriod(@RequestBody SearchParametersWrapper searchParametersWrapper) {
-        return carService.findFreeCarsInTimePeriod(searchParametersWrapper);
+        return carSearchService.findFreeCarsInTimePeriod(searchParametersWrapper);
     }
 
     @PostMapping("/cars")
@@ -44,6 +46,7 @@ public class CarController {
     }
 
     @DeleteMapping("/cars/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCarById(@PathVariable Long id) {
         carService.deleteCarById(id);
     }
