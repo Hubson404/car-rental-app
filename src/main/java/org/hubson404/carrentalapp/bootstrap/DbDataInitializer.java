@@ -1,4 +1,4 @@
-package org.hubson404.carrentalapp;
+package org.hubson404.carrentalapp.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.*;
