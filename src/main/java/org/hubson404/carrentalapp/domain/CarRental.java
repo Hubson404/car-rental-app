@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity(name = "car_rentals")
 @Data
@@ -27,7 +27,7 @@ public class CarRental {
     @OneToOne
     private CarReservation reservation;
 
-    private LocalDateTime rentalDate;
+    private LocalDate rentalDate;
     private String comment;
 
 }

@@ -10,7 +10,7 @@ import org.hubson404.carrentalapp.repositories.CarReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +23,6 @@ public class CarReservationService {
 
     private final CarReservationRepository carReservationRepository;
     private final CarReservationMapper carReservationMapper;
-
 
     public CarReservationDto createReservation(CarReservationDto carReservationDTO) {
         CarReservation carReservation = carReservationMapper.toCarReservation(carReservationDTO);
@@ -38,8 +37,8 @@ public class CarReservationService {
         int differentReturnDepartmentCost = 50;
 
         Double costPerDay = reservation.getCar().getCostPerDay();
-        LocalDateTime rentalStartingDate = reservation.getRentalStartingDate();
-        LocalDateTime returnDate = reservation.getReturnDate();
+        LocalDate rentalStartingDate = reservation.getRentalStartingDate();
+        LocalDate returnDate = reservation.getReturnDate();
 
         long rentalDurationInDays = ChronoUnit.DAYS.between(rentalStartingDate, returnDate);
 
@@ -84,10 +83,10 @@ public class CarReservationService {
         CarReservation carReservation = carReservationRepository.findById(id)
                 .orElseThrow(() -> new CarReservationNotFoundException(id));
 
-        LocalDateTime rentalStartingDate = carReservation.getRentalStartingDate();
-        LocalDateTime penalisedCancelDateDeadline = rentalStartingDate.minus(penalisedDaysBeforeRentalStart, ChronoUnit.DAYS);
+        LocalDate rentalStartingDate = carReservation.getRentalStartingDate();
+        LocalDate penalisedCancelDateDeadline = rentalStartingDate.minus(penalisedDaysBeforeRentalStart, ChronoUnit.DAYS);
 
-        if (penalisedCancelDateDeadline.isAfter(LocalDateTime.now())) {
+        if (penalisedCancelDateDeadline.isAfter(LocalDate.now())) {
             carReservation.setTotalCost(0d);
         } else {
             Double totalCost = carReservation.getTotalCost();

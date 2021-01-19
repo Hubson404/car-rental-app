@@ -1,14 +1,12 @@
 package org.hubson404.carrentalapp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hubson404.carrentalapp.domain.enums.CarBodyColor;
 import org.hubson404.carrentalapp.domain.enums.CarBodyType;
 import org.hubson404.carrentalapp.domain.enums.CarStatus;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "cars")
@@ -46,4 +44,11 @@ public class Car {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "car")
+    private List<CarReservation> reservations;
+
+    public Car(Object o, String mmm, String bbb, CarBodyType coupe, int i, CarBodyColor white, long l, CarStatus available, double v, Department warsaw) {
+    }
 }

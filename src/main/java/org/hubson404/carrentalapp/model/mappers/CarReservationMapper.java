@@ -14,7 +14,7 @@ import org.hubson404.carrentalapp.repositories.CustomerRepository;
 import org.hubson404.carrentalapp.repositories.DepartmentRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
@@ -25,16 +25,13 @@ public class CarReservationMapper {
     private final CustomerRepository customerRepository;
 
     public CarReservation toCarReservation(CarReservationDto carReservationDto) {
-
         CarReservation carReservation = new CarReservation();
-
         carReservation.setCar(getCar(carReservationDto));
         carReservation.setCarRentalDepartment(getDepartment(carReservationDto.getCarRentalDepartment()));
         carReservation.setCarReturnDepartment(getDepartment(carReservationDto.getCarReturnDepartment()));
         carReservation.setCustomer(getCustomer(carReservationDto));
         carReservation.setRentalStartingDate(getDate(carReservationDto.getRentalStartingDate()));
         carReservation.setReturnDate(getDate(carReservationDto.getReturnDate()));
-
         return carReservation;
     }
 
@@ -43,8 +40,8 @@ public class CarReservationMapper {
         return carRepository.findById(carId).orElseThrow(() -> new CarNotFoundException(carId));
     }
 
-    private LocalDateTime getDate(String dateString) {
-        return LocalDateTime.parse(dateString);
+    private LocalDate getDate(String dateString) {
+        return LocalDate.parse(dateString);
     }
 
     private Customer getCustomer(CarReservationDto carReservationDto) {
@@ -59,7 +56,6 @@ public class CarReservationMapper {
     }
 
     public CarReservationDto toCarReservationDto(CarReservation carReservation) {
-
         return CarReservationDto.builder()
                 .id(carReservation.getId())
                 .car(carReservation.getCar().getId())

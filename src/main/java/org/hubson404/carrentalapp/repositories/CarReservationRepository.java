@@ -8,4 +8,5 @@ import java.util.List;
 public interface CarReservationRepository extends JpaRepository<CarReservation, Long> {
 
     List<CarReservation> findCarReservationByCarId(Long id);
+
 }
