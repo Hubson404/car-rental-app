@@ -1,33 +1,35 @@
 package org.hubson404.carrentalapp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hubson404.carrentalapp.domain.enums.EmployeePosition;
+import org.hubson404.carrentalapp.domain.utils.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
-@Entity(name = "employees")
-@Data
+@Getter
+@Setter
+@Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Employee implements UserDetails {
+@DiscriminatorValue("1")
+@Table(name = "employees")
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class Employee extends AppUser {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    public Employee(String firstName, String lastName, String password,
+                    Department department, EmployeePosition position) {
+        super(null, firstName, lastName, createCompanyEmailAddress(firstName, lastName), password);
+        this.department = department;
+        this.position = position;
+    }
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
+    private static String createCompanyEmailAddress(String firstName, String lastName) {
+        return lastName + "." + firstName + "@car-rental.org";
+    }
 
     @Enumerated(EnumType.STRING)
     private EmployeePosition position;
@@ -39,16 +41,6 @@ public class Employee implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
     }
 
     @Override
