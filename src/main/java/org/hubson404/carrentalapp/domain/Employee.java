@@ -14,7 +14,6 @@ import java.util.Collections;
 @Setter
 @Entity
 @NoArgsConstructor
-@DiscriminatorValue("1")
 @Table(name = "employees")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

@@ -5,7 +5,6 @@ import org.hubson404.carrentalapp.domain.utils.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Collection;
@@ -15,7 +14,6 @@ import java.util.Collections;
 @Setter
 @Entity
 @NoArgsConstructor
-@DiscriminatorValue("2")
 @Table(name = "customers")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
