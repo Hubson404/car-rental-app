@@ -23,10 +23,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.DELETE).hasRole("EMPLOYEE")
-                .antMatchers(HttpMethod.POST, "/reservations").authenticated()
-                .anyRequest()
-                .permitAll()
+                .antMatchers(HttpMethod.DELETE, "/reservations/**", "/departments/**",
+                        "/cars/**", "/employees/**", "/customer/**", "/departments/**", "/reservations/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/departments", "/employees", "/cars").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/employees/**").hasRole("ADMIN")
+                .antMatchers("/rentals/**", "/returns/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .antMatchers(HttpMethod.PATCH, "/cars/**", "/reservations/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .antMatchers(HttpMethod.POST, "/reservations", "/cars/search").authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .and()
