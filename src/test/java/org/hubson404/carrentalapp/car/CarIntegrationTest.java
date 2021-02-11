@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -30,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 class CarIntegrationTest {
 
@@ -48,8 +50,8 @@ class CarIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        carRepository.deleteAll();
-        departmentRepository.deleteAll();
+        carRepository.deleteAllInBatch();
+        departmentRepository.deleteAllInBatch();
     }
 
     @Test
@@ -92,7 +94,7 @@ class CarIntegrationTest {
         int expectedNumberOfEntriesInRepository = 1;
 
         Department department = departmentRepository.save(new Department(
-                null, "Warsaw", null, null));
+                null, "Warsaw", null, null, null));
         CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder()
                 .model("testModel")
                 .brand("testBrand")
@@ -122,13 +124,13 @@ class CarIntegrationTest {
     void modifyCar_modifiesCarAndReturnsStatusCode202() throws Exception {
         // given
         Department warsaw = departmentRepository.save(new Department(
-                null, "Warsaw", null, null));
+                null, "Warsaw", null, null, null));
         Car savedCar = carRepository.save(new Car(
-                null, "Mmm", "Bbb", CarBodyType.COUPE, 1999,
-                CarBodyColor.WHITE, 0L, CarStatus.AVAILABLE, 100d, warsaw));
+                null, "Model", "Brand", CarBodyType.COUPE, 1999,
+                CarBodyColor.WHITE, 0L, CarStatus.AVAILABLE, 100d, warsaw, null));
         Long savedCarId = savedCar.getId();
 
-        CarDto carDTO = org.hubson404.carrentalapp.model.CarDto.builder().model("modifiedModel").build();
+        CarDto carDTO = CarDto.builder().model("modifiedModel").build();
         // when
         String requestBody = objectMapper.writeValueAsString(carDTO);
 
@@ -147,7 +149,7 @@ class CarIntegrationTest {
     }
 
     @Test
-    void deleteCarById_deletesEmployeeAndReturnStatusCode200() throws Exception {
+    void deleteCarById_deletesEmployeeAndReturnStatusCode204() throws Exception {
         // given
         int expectedNumberOfEntriesInRepository = 3;
         for (int i = 0; i < expectedNumberOfEntriesInRepository; i++) {
@@ -160,7 +162,7 @@ class CarIntegrationTest {
         MvcResult result = mockMvc.perform(delete).andReturn();
         // then
         MockHttpServletResponse response = result.getResponse();
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
         List<Car> cars = carRepository.findAll();
         assertThat(cars.size()).isEqualTo(expectedNumberOfEntriesInRepository);
     }

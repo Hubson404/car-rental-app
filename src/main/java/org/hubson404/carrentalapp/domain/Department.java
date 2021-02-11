@@ -5,16 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity(name = "departments")
+@Entity
+@Table(name = "departments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Department {
-
-    @ManyToOne
-    @JoinColumn(name = "carRentalCompany_id")
-    private CarRentalCompany carRentalCompany;
 
     @Id
     @GeneratedValue
@@ -37,11 +34,7 @@ public class Department {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Car> cars;
 
-    public Department(Long id, String address, Set<Employee> employees, Set<Car> cars) {
-        this.id = id;
-        this.address = address;
-        this.employees = employees;
-        this.cars = cars;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = "carRentalCompany_id")
+    private CarRentalCompany carRentalCompany;
 }

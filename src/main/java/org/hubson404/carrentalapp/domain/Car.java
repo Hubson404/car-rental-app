@@ -41,14 +41,11 @@ public class Car {
 
     //prawdopodobnie do usunięcia
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "departments_id")
     private Department department;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "car")
     private List<CarReservation> reservations;
-
-    public Car(Object o, String mmm, String bbb, CarBodyType coupe, int i, CarBodyColor white, long l, CarStatus available, double v, Department warsaw) {
-    }
 }

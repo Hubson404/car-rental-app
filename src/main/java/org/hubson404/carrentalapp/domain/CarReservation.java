@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity(name = "car_reservations")
+@Entity
+@Table(name = "car_reservations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

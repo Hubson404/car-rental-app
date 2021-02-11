@@ -4,7 +4,6 @@ import org.hubson404.carrentalapp.domain.Car;
 import org.hubson404.carrentalapp.domain.Department;
 import org.hubson404.carrentalapp.exceptions.CarNotFoundException;
 import org.hubson404.carrentalapp.exceptions.DepartmentNotFoundException;
-import org.hubson404.carrentalapp.exceptions.InsufficientDataException;
 import org.hubson404.carrentalapp.model.CarDto;
 import org.hubson404.carrentalapp.model.DepartmentDto;
 import org.hubson404.carrentalapp.model.mappers.CarMapper;
@@ -54,71 +53,6 @@ class CarServiceTest {
     }
 
     @Test
-    void createCar_whenModelFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "  ", "Aaa", "COUPE", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenBrandFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "S5", "  ", "COUPE", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenCarBodyTypeFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "  ", 1999,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenProductionYearFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "Bdt", null,
-                "WHITE", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenCarBodyColorFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "  ", 1999,
-                "BLACK", 0L, "AVAILABLE", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
     void createCar_whenMileageFieldIsNull_CallsCarRepository() {
         // given
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(new Department()));
@@ -132,45 +66,6 @@ class CarServiceTest {
         carService.createCar(carDTO);
         // then
         verify(carRepository, times(1)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenCarStatusFieldIsBlank_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLACK", 0L, "   ", 100d, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenCostPerDayFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLK", 0L, "AVAILABLE", null, DepartmentDto.builder().id(1L).build());
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
-    }
-
-    @Test
-    void createCar_whenDepartmentFieldIsNull_ThrowsExceptionAndDoesNotCallCarRepository() {
-        // given
-        CarDto carDTO = new CarDto(
-                null, "Mmm", "Bbb", "COUPE", 1999,
-                "BLK", 0L, "AVAILABLE", 100d, null);
-        // when
-        Throwable result = catchThrowable(() -> carService.createCar(carDTO));
-        // then
-        assertThat(result).isExactlyInstanceOf(InsufficientDataException.class);
-        verify(carRepository, times(0)).save(any(Car.class));
     }
 
     @Test
