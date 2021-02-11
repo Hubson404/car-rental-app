@@ -98,6 +98,7 @@ public class EmployeeService {
 
     private Employee saveEmployee(EmployeeDto employeeDTO) {
         Employee createdEmployee = employeeMapper.toEmployee(employeeDTO);
+        createdEmployee.setEmail(employeeDTO.getLastName() + "." + employeeDTO.getFirstName() + "@car-rental.com");
         Employee employeeWithDepartment = getDepartmentFromRepositoryForEmployee(
                 employeeDTO.getDepartment().getId(), createdEmployee);
         return employeeRepository.save(employeeWithDepartment);

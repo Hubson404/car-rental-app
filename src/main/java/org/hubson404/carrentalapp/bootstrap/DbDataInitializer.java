@@ -1,4 +1,4 @@
-package org.hubson404.carrentalapp;
+package org.hubson404.carrentalapp.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import org.hubson404.carrentalapp.domain.*;
@@ -10,6 +10,7 @@ import org.hubson404.carrentalapp.repositories.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class DbDataInitializer {
     private final EmployeeRepository employeeRepository;
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener(ApplicationReadyEvent.class)
     public void checkDbStatus() {
@@ -52,10 +54,14 @@ public class DbDataInitializer {
         createCustomer("Matt", "Walker", "Gdansk");
     }
 
-    private void createCustomer(String name, String lastname, String address) {
-        Customer build = Customer.builder().firstName(name).lastName(lastname).address(address)
-                .email(name + "." + lastname + "@email.com").build();
-        customerRepository.save(build);
+    private void createCustomer(String name, String lastName, String address) {
+        Customer customer = new Customer();
+        customer.setFirstName(name);
+        customer.setLastName(lastName);
+        customer.setPassword(passwordEncoder.encode("password"));
+        customer.setEmail(name + "." + lastName + "@email.com");
+        customer.setAddress(address);
+        customerRepository.save(customer);
     }
 
     private void createAudiCar(Department department, CarBodyColor color) {
@@ -75,6 +81,8 @@ public class DbDataInitializer {
         employee.setFirstName(name);
         employee.setLastName(lastName);
         employee.setPosition(position);
+        employee.setEmail(name + "." + lastName + "@car-rental.com");
+        employee.setPassword(passwordEncoder.encode("password"));
         employee.setDepartment(department);
         employeeRepository.save(employee);
     }

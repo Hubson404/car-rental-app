@@ -27,6 +27,8 @@ public class EmployeeDto {
     @Length(min = 2, message = "Input must be 2 characters or longer")
     private String lastName;
 
+    private String email;
+
     @UpperCase
     @EnumValue(
             enumClass = EmployeePosition.class
